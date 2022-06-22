@@ -1,10 +1,8 @@
 package com.example.Avooto.models;
 
-
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,23 +11,29 @@ import java.util.*;
 @Table(name = "users")
 @Data
 public class User implements UserDetails {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto
     @Column(name = "id")
     private Long id;
     @Column(name = "email", unique = true)
     private String email;
-    @Column(name = "phoneNumber")
+    @Column(name = "phoneNumber", length = 11)
     private String phoneNumber;
     @Column(name = "name")
     private String name;
     @Column(name = "active")
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "image_id")
     @JoinColumn(name = "image_id")
-    private Image avatar;
+    private List<Image> avatars = new ArrayList<>();
+    @Column(name = "preview_image_id")
+    private Long previewImageId;
     @Column(name = "password", length = 1000)
     private String password;
+    @Column(name = "activation_code")
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role",
@@ -44,6 +48,11 @@ public class User implements UserDetails {
     @PrePersist
     private void init() {
         dateOfCreated = LocalDateTime.now();
+    }
+
+    public void addAvatarToUser(Image avatar) {
+        avatar.setUser(this);
+        avatars.add(avatar);
     }
 
     public boolean isAdmin() {

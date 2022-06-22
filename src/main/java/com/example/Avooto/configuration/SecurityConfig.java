@@ -1,6 +1,6 @@
 package com.example.Avooto.configuration;
 
-import com.example.Avooto.service.CustomUserDetailService;
+import com.example.Avooto.servicies.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,12 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final CustomUserDetailService userDetailService;
+    private final CustomUserDetailService userDetailsService;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/product/**", "/images/**", "/registration", "/user/**")
+                .antMatchers("/", "/product/**", "/images/**", "/registration", "/user/**", "/activate/*",
+                        "/profile/**", "/static/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -34,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService)
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 

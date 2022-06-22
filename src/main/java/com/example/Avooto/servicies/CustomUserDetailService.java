@@ -1,4 +1,4 @@
-package com.example.Avooto.service;
+package com.example.Avooto.servicies;
 
 import com.example.Avooto.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,4 +15,5 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email);
     }
+
 }
