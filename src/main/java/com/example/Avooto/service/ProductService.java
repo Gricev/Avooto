@@ -1,4 +1,4 @@
-package com.example.Avooto.service;
+package com.example.Avooto.servicies;
 
 import com.example.Avooto.models.Image;
 import com.example.Avooto.models.Product;

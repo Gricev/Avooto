@@ -1,6 +1,6 @@
 package com.example.Avooto.configuration;
 
-import com.example.Avooto.service.CustomUserDetailService;
+import com.example.Avooto.servicies.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

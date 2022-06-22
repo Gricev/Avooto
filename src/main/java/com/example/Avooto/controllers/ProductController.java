@@ -1,7 +1,7 @@
 package com.example.Avooto.controllers;
 
 import com.example.Avooto.models.Product;
-import com.example.Avooto.service.ProductService;
+import com.example.Avooto.servicies.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

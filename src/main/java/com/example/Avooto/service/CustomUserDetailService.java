@@ -1,4 +1,4 @@
-package com.example.Avooto.service;
+package com.example.Avooto.servicies;
 
 import com.example.Avooto.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.example.Avooto.controllers;
 
 import com.example.Avooto.models.Role;
 import com.example.Avooto.models.User;
-import com.example.Avooto.service.UserService;
+import com.example.Avooto.servicies.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
