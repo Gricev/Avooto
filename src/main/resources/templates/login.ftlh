@@ -7,7 +7,7 @@
             <label for="email">Электронная почта</label>
             <input type="email" class="form-control <#if RequestParameters.error??>is-invalid</#if>" id="email" name="username">
             <div id="email" class="invalid-feedback">
-                Неверныя электронная почта
+                Неверная электронная почта
             </div>
         </div>
         <div class="form-group">
@@ -21,10 +21,6 @@
 
         <button type="submit" style="width: 100%" class="btn btn-dark">Войти</button>
     </form>
-        <h2 style="color: lightslategrey">${message!}</h2>
     <hr>
-    <h3>Нет аккаунта на Avooto? <a href="/registration">Зарегистрируйся!</a></h3>
+    <h3><a href="/registration">Регистрация</a></h3>
 </@t.template>
-
-
-<#--<h2 style="color: lightslategrey">${message?if_exists}</h2>-->

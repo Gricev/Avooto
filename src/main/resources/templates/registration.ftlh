@@ -12,7 +12,7 @@
             <input type="email" class="form-control" id="email" required name="email">
         </div>
         <div class="form-group">
-            <label for="phoneNumber">Номер телефона</label>
+            <label for="phoneNumber">Номер телефона без символов, начиная с "7", например: 79001234567</label>
             <input type="text" class="form-control" id="phoneNumber" required name="phoneNumber">
         </div>
         <div class="form-group">

@@ -17,6 +17,7 @@ public class ProductDto {
     private String description;
     private int price;
     private String city;
+    private String category;
     private List<Image> images = new ArrayList<>();
     private Long previewImageId;
     private User user;

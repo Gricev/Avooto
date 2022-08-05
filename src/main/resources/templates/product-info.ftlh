@@ -37,10 +37,24 @@
         </a>
     </div>
     <hr>
+    <a href="/product/category/${product.category}">
+        <p><h1 style="text-align: center">${product.category}</h1></p>
+    </a>
     <p><h1 style="text-align: center">${product.title} | ${product.price} ₽</h1></p>
     <p style="text-align: center">${product.description}</p>
     <p style="text-align: center">Номер телефона продавца: <b>${authorProduct.phoneNumber}</b></p>
-
+    <a href="/product/city/${product.city}">
+        <p><h1 style="text-align: center">${product.city}</h1></p>
+    </a>
+    <p style="text-align: center">
+        <a href="https://wa.clck.bar/${phone}">
+                <img src="/static/images/whatsup.png" width="32" height="32" class="rounded-circle"> Связаться с продавцом
+        </a>
+    </p>
+<#--    <p style="text-align: center">${product.views}</p>-->
+    <p style="text-align: center">Дата создания объявления: ${product.dateOfCreated}; |
+<#--        Количество просмотров: ${product.views};-->
+    </p>
     <hr>
     <p style="text-align: center">
         <a href="/user/${authorProduct.id}">

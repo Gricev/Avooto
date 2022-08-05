@@ -55,6 +55,10 @@ public class User implements UserDetails {
         avatars.add(avatar);
     }
 
+    public void  deleteAvatarFromUser() {
+        avatars.clear();
+    }
+
     public boolean isAdmin() {
         return  roles.contains((Role.ROLE_ADMIN));
     }

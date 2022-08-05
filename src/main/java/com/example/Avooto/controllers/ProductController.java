@@ -3,6 +3,8 @@ package com.example.Avooto.controllers;
 import com.example.Avooto.dto.ProductDto;
 import com.example.Avooto.models.Product;
 import com.example.Avooto.models.User;
+//import com.example.Avooto.repositories.ProductDao;
+import com.example.Avooto.repositories.ProductJDBC;
 import com.example.Avooto.servicies.ProductService;
 import com.example.Avooto.servicies.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,25 +23,50 @@ import java.security.Principal;
 public class ProductController {
     private final ProductService productService;
     private final UserService userService;
+//    private final ProductDao productDao;
+    private final ProductJDBC productJDBC;
 
-    @GetMapping("/")
+    @GetMapping
     public String products(@RequestParam(name = "title", required = false) String title,
+                           @RequestParam(name = "category", required = false) String category,
+                           @RequestParam(name = "city", required = false) String city,
                            Principal principal, User user, Model model) {
-        model.addAttribute("products", productService.listProducts(title));
+//        model.addAttribute("products", productService.getProductsListByResultSet(productDao.searchingByWord(title)));
+        model.addAttribute("products", productService.getProductsListByTitle(productService.getTitleFromSearch(title)));
+//        model.addAttribute("products", productJDBC.searchingByWord(title));
+//        model.addAttribute("products", productService.getProductsListByTitle(title));
+        model.addAttribute("productsByCategory", productService.getProductsListByCategory(category));
+        model.addAttribute("productsByCity", productService.getProductsListByCity(city));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);
-        model.addAttribute("searchWord", title);
-        return "products" ;
+//        model.addAttribute("searchWord", productService.getTitleFromSearch(title));
+//        model.addAttribute("searchWord", productService.getTitleFromSearch(title));
+//        model.addAttribute("sortToDecrease", productService.getProductsByPriceDecreasing(productService.getProductsListByPrice(price)));
+//        model.addAttribute("sortToIncrease", productService.getProductsByPriceIncreasing(productService.getProductsListByPrice(price)));
+        return "products";
     }
 
     @GetMapping("/product/{id}/{user}")
     public String productInfo(@PathVariable("id") Long id,
                               @PathVariable("user") User user,
-                              Model model, Principal principal) {
+                              Model model, Principal principal) throws NullPointerException {
         Product product = productService.getProductById(id);
         model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
         model.addAttribute("product", product);
         model.addAttribute("user", user);
+        model.addAttribute("images", product.getImages());
+        model.addAttribute("authorProduct", product.getUser());
+        model.addAttribute("phone", user.getPhoneNumber());
+//        model.addAttribute("views", product.lookViews());
+        return "product-info";
+    }
+
+    @GetMapping("/product/{id}")
+    public String productInfoById(@PathVariable("id") Long id,
+                              Model model, Principal principal) throws NullPointerException {
+        Product product = productService.getProductById(id);
+        model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
+        model.addAttribute("product", product);
         model.addAttribute("images", product.getImages());
         model.addAttribute("authorProduct", product.getUser());
         return "product-info";
@@ -61,6 +88,7 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/my/products";
     }
+
     @GetMapping("/my/products")
     public String userProducts(Principal principal, Model model) {
         User user = productService.getUserByPrincipal(principal);
@@ -95,7 +123,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/edit/{id}")
-    public String editProductInformation(@PathVariable(value = "id") Long id,@RequestParam("file1") MultipartFile file1,
+    public String editProductInformation(@PathVariable(value = "id") Long id, @RequestParam("file1") MultipartFile file1,
                                          @RequestParam("file2") MultipartFile file2,
                                          @RequestParam("file3") MultipartFile file3,
                                          @RequestParam("file4") MultipartFile file4,
@@ -105,6 +133,21 @@ public class ProductController {
         return "redirect:/my/products";
     }
 
+    @GetMapping("/product/category/{category}")
+    public String getProductsByCategory(@PathVariable(value = "category") String category,
+                                        Principal principal, User user, Model model) {
+        model.addAttribute("products", productService.getProductsListByCategory(category));
+        model.addAttribute("user", productService.getUserByPrincipal(principal));
+        model.addAttribute("userAnyOne", user);
+        return "productsByCategory";
+    }
+
+    @GetMapping("/product/city/{city}")
+    public String getProductsByCity(@PathVariable(value = "city") String city,
+                                    Principal principal, User user, Model model) {
+        model.addAttribute("products", productService.getProductsListByCity(city));
+        model.addAttribute("user", productService.getUserByPrincipal(principal));
+        model.addAttribute("userAnyOne", user);
+        return "productsByCity";
+    }
 }
-
-

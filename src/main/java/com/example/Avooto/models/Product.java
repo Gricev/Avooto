@@ -28,6 +28,10 @@ public class Product  {
     private int price;
     @Column(name = "city")
     private String city;
+    @Column(name = "category")
+    private String category;
+    @Column(name = "views")
+    private Long views;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> images = new ArrayList<>();
@@ -46,4 +50,9 @@ public class Product  {
         image.setProduct(this);
         images.add(image);
     }
+
+//    public Long lookViews() throws NullPointerException {
+//        views = Long.valueOf(1);
+//        return views++;
+//    }
 }

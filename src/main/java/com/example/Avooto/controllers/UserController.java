@@ -1,7 +1,6 @@
 package com.example.Avooto.controllers;
 
 import com.example.Avooto.dto.UserDto;
-import com.example.Avooto.models.PrincipalUser;
 import com.example.Avooto.models.User;
 import com.example.Avooto.servicies.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,7 +29,6 @@ public class UserController {
     public String profile(Principal principal, Model model) {
         User user = userService.getUserByPrincipal(principal);
         model.addAttribute("user", user);
-
         return "profile";
     }
 
@@ -74,14 +71,73 @@ public class UserController {
     public String editUserInfo(Principal principal, Model model) {
         User user = userService.getUserByPrincipal(principal);
         model.addAttribute("user", user);
-        return "user-edit-profile";
+        return "userEditProfile";
     }
 
-    @PostMapping("/profile/edit")
-    public String editUserProfile(@RequestParam("file") MultipartFile file,
-                                  Principal principal, UserDto user) throws IOException {
-        userService.changeUserInfo(principal, user, file);
+    @GetMapping("/profile/edit/username")
+    public String editUserProfileUserName(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        model.addAttribute("username", user.getName());
+        return "userEditProfileUserName";
+    }
+
+    @PostMapping("/profile/edit/username")
+    public String editUserProfileUserName(Principal principal, UserDto user) {
+        userService.changeUserName(principal, user);
         return "redirect:/profile";
     }
 
+    @GetMapping("/profile/edit/phone")
+    public String editUserProfilePhoneNumber(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        model.addAttribute("phone", user.getPhoneNumber());
+        return "userEditProfilePhoneNumber";
+    }
+
+    @PostMapping("/profile/edit/phone")
+    public String editUserProfilePhoneNumber(Principal principal, UserDto user) {
+        userService.changeUserPhone(principal, user);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/edit/password")
+    public String editUserProfilePassword(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        return "userEditProfilePassword";
+    }
+
+    @PostMapping("/profile/edit/password")
+    public String editUserProfilePassword(Principal principal, UserDto user) {
+        userService.changeUserPassword(principal, user);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/edit/avatar/delete")
+    public String editUserProfileAvatar(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        return "userEditProfileAvatarDelete";
+    }
+
+    @GetMapping("/profile/edit/avatar/change")
+    public String deleteUserProfileAvatar(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        return "userEditProfileAvatar";
+    }
+
+    @PostMapping("/profile/edit/avatar/change")
+    public String editUserProfileAvatar(Principal principal, MultipartFile file) throws IOException {
+        userService.changeUserAvatar(principal, file);
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/edit/avatar/delete")
+    public String deleteUserProfileAvatar(Principal principal) {
+        userService.deleteAvatar(principal);
+        return "redirect:/profile";
+    }
 }

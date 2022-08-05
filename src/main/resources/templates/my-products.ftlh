@@ -30,6 +30,9 @@
                     <div class="card-footer">
                         ${product.city}
                     </div>
+                    <div class="card-footer">
+                        ${product.category}
+                    </div>
                 </div>
             </a>
         <#else>

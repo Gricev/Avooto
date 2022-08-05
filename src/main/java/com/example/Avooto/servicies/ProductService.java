@@ -4,6 +4,7 @@ import com.example.Avooto.dto.ProductDto;
 import com.example.Avooto.models.Image;
 import com.example.Avooto.models.Product;
 import com.example.Avooto.models.User;
+import com.example.Avooto.repositories.ProductJDBC;
 import com.example.Avooto.repositories.ProductRepository;
 import com.example.Avooto.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,11 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ProductJDBC productJDBC;
 
-    public  List<Product> listProducts(String title) {
+
+
+    public List<Product> getProductsListByTitle(String title) {
         if (title != null) {
             return productRepository.findByTitle(title);
         } else {
@@ -30,6 +36,41 @@ public class ProductService {
         }
     }
 
+//    public List<Product> getProductsListByResultSet(ResultSet title) {
+//        if (title != null) {
+//            return productRepository.findByResultSet(title);
+//        } else {
+//            return productRepository.findAll();
+//        }
+//    }
+
+    public List<Product> getProductsListByCategory(String category) {
+        if (category != null) {
+            return productRepository.findByCategory(category);
+        } else {
+            return productRepository.findAll();
+        }
+    }
+
+    public List<Product> getProductsListByCity(String city) {
+        if (city != null) {
+            return productRepository.findByCity(city);
+        } else {
+            return productRepository.findAll();
+        }
+    }
+
+    public List<Product> getProductsListByPrice(int price) {
+        if (price != 0) {
+            return productRepository.findByPrice(price);
+        } else {
+            return productRepository.findAll();
+        }
+    }
+
+//    public List<Product> getProductsListByPriceBetween(int firstPrice, int secondPrice) {
+//
+//    }
 
     public void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3,
@@ -40,24 +81,24 @@ public class ProductService {
         Image image3;
         Image image4;
         Image image5;
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image1 = toImageEntity(file1);
             image1.setPreviewImage(true);
             product.addImageToProduct(image1);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image2 = toImageEntity(file2);
             product.addImageToProduct(image2);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image3 = toImageEntity(file3);
             product.addImageToProduct(image3);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image4 = toImageEntity(file4);
             product.addImageToProduct(image4);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image5 = toImageEntity(file5);
             product.addImageToProduct(image5);
         }
@@ -116,7 +157,7 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-      return  productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     public void changeProductInfo(Long id, ProductDto productBeforeUpdate,
@@ -129,24 +170,24 @@ public class ProductService {
         Image image3;
         Image image4;
         Image image5;
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image1 = toImageEntity(file1);
             image1.setPreviewImage(true);
             productAfterUpdate.addImageToProduct(image1);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image2 = toImageEntity(file2);
             productAfterUpdate.addImageToProduct(image2);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image3 = toImageEntity(file3);
             productAfterUpdate.addImageToProduct(image3);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image4 = toImageEntity(file4);
             productAfterUpdate.addImageToProduct(image4);
         }
-        if(file1.getSize() !=0) {
+        if (file1.getSize() != 0) {
             image5 = toImageEntity(file5);
             productAfterUpdate.addImageToProduct(image5);
         }
@@ -155,10 +196,34 @@ public class ProductService {
         productAfterUpdate.setPrice(productBeforeUpdate.getPrice());
         productAfterUpdate.setCity(productBeforeUpdate.getCity());
         productAfterUpdate.setDescription(productBeforeUpdate.getDescription());
-//        Product productFromDb = productRepository.save(productAfterUpdate);
-//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
-//        productRepository.save(productAfterUpdate);
+        productAfterUpdate.setCategory(productBeforeUpdate.getCategory());
         productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
         productRepository.save(productAfterUpdate);
     }
+
+    public List<Product> getProductsByPriceDecreasing(List<Product> products) {
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getPrice).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> getProductsByPriceIncreasing(List<Product> products) {
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getPrice))
+                .collect(Collectors.toList());
+    }
+//
+//    public Product getProductsByPriceDecreasing(List<Product> products) {
+//        return products.stream().max(Comparator.comparing(Product::getPrice)).orElse(null);
+//    }
+//
+//    public Product getProductsByPriceIncreasing(List<Product> products) {
+//        return products.stream().min(Comparator.comparing(Product::getPrice)).orElse(null);
+//    }
+
+    public String getTitleFromSearch(String title) {
+        productJDBC.searchingByWord(title);
+        return title;
+    }
 }
+

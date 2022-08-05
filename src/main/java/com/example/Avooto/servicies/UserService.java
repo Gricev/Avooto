@@ -2,14 +2,13 @@ package com.example.Avooto.servicies;
 
 import com.example.Avooto.dto.UserDto;
 import com.example.Avooto.models.Image;
-import com.example.Avooto.models.PrincipalUser;
 import com.example.Avooto.models.Role;
 import com.example.Avooto.models.User;
+//import com.example.Avooto.repositories.ProductDao;
 import com.example.Avooto.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -36,19 +35,22 @@ public class UserService {
             return false;
         }
         user.setActive(true);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         user.getRoles().add(Role.ROLE_USER);
         user.setActivationCode(UUID.randomUUID().toString());
         log.info("Saving new User with email: {}", email);
         userRepository.save(user);
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome to Avooto, please, visit next link: http://localhost:8112/activate/%s",
+                    "Здравствуйте, %s! \n" +
+                            "Добро пожаловать на AVOOTO, для перехода на сайт нажмите: http://localhost:8112/activate/%s" +
+                            " your password: " + user.getPassword(),
                     user.getEmail(),
                     user.getActivationCode()
             );
-            mailService.sendSimpleMessage(user.getEmail(), "Activation code", message);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+            mailService.sendSimpleMessage(user.getEmail(), "Активация аккаунта AVOOTO", message);
         }
         return true;
     }
@@ -89,41 +91,14 @@ public class UserService {
         return userRepository.findByEmail(principal.getName());
     }
 
-    public User getUserByPrincipaly(PrincipalUser principal) {
-        if (principal == null) return new User();
-        return userRepository.findByEmail(principal.getUsername());
-    }
-
-
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
         if (user == null) {
             return false;
         }
         user.setActivationCode(null);
-
         userRepository.save(user);
         return true;
-    }
-
-    public void changeUserInfo(Principal principal, UserDto userBeforeUpdate, MultipartFile file) throws IOException {
-        User userAfterUpdate = getUserByPrincipal(principal);
-        Image avatar;
-        if (file.getSize() != 0) {
-            avatar = toImageEntity(file);
-            avatar.setPreviewImage(true);
-            userAfterUpdate.addAvatarToUser(avatar);
-        }
-        userAfterUpdate.setEmail(userBeforeUpdate.getEmail());
-        userAfterUpdate.setName(userBeforeUpdate.getName());
-        userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
-        userAfterUpdate.setPhoneNumber(userBeforeUpdate.getPhoneNumber());
-        userRepository.save(userAfterUpdate);
-        log.info("Saving changes in Repo. Email: {}; password: {}; name: {}; phoneNumber: {};",
-                userAfterUpdate.getEmail(), passwordEncoder.encode(userAfterUpdate.getPassword()),
-                userAfterUpdate.getName(), userAfterUpdate.getPhoneNumber());
-        userAfterUpdate.setPreviewImageId(userAfterUpdate.getAvatars().get(0).getId());
-        userRepository.save(userAfterUpdate);
     }
 
     private Image toImageEntity(MultipartFile file) throws IOException {
@@ -135,7 +110,73 @@ public class UserService {
         image.setBytes(file.getBytes());
         return image;
     }
+
+    public void changeUserName(Principal principal, UserDto userBeforeUpdate) {
+        User userAfterUpdate = getUserByPrincipal(principal);
+        userAfterUpdate.setName(userBeforeUpdate.getName());
+        log.info("Saving changes in Repo. Username: {}; ", userAfterUpdate.getName());
+        userRepository.save(userAfterUpdate);
+    }
+
+    public void changeUserPhone(Principal principal, UserDto userBeforeUpdate) {
+        User userAfterUpdate = getUserByPrincipal(principal);
+        userAfterUpdate.setPhoneNumber(userBeforeUpdate.getName());
+        userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
+        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+            String message = String.format(
+                    "Здравствуйте, %s! \n" +
+                            "Ваш телефон был успешно изменен, если это были не Вы, перейдите по ссылке и " +
+                            "измените пароль: http://localhost:8112/activate/%s" +
+                            " Ваш новый телефон: " + userAfterUpdate.getPhoneNumber(),
+                    userAfterUpdate.getEmail(),
+                    userAfterUpdate.getActivationCode()
+            );
+            log.info("Saving changes in Repo. Phone-number: {}; ", userAfterUpdate.getPhoneNumber());
+            userRepository.save(userAfterUpdate);
+            mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение номера телефона AVOOTO", message);
+        }
+    }
+
+    public void changeUserPassword(Principal principal, UserDto userBeforeUpdate) {
+        User userAfterUpdate = getUserByPrincipal(principal);
+        userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
+        userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
+        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+            String message = String.format(
+                    "Здравствуйте, %s! \n" +
+                            "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
+                            " Ваш новый пароль: " + userAfterUpdate.getPassword(),
+                    userAfterUpdate.getEmail(),
+                    userAfterUpdate.getActivationCode()
+            );
+            userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
+            log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
+            userRepository.save(userAfterUpdate);
+            mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+        }
+    }
+
+    public void changeUserAvatar(Principal principal, MultipartFile file) throws IOException {
+        User userAfterUpdate = getUserByPrincipal(principal);
+        Image avatar;
+        if (file.getSize() != 0) {
+            avatar = toImageEntity(file);
+            avatar.setPreviewImage(true);
+            userAfterUpdate.addAvatarToUser(avatar);
+            userAfterUpdate.setPreviewImageId(userAfterUpdate.getAvatars().get(0).getId());
+            userRepository.save(userAfterUpdate);
+
+        }
+    }
+
+    public void deleteAvatar(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        user.getAvatars().clear();
+        userRepository.save(user);
+    }
 }
+
+
 
 
 
