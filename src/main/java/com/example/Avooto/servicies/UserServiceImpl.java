@@ -4,7 +4,6 @@ import com.example.Avooto.dto.UserDto;
 import com.example.Avooto.models.Image;
 import com.example.Avooto.models.Role;
 import com.example.Avooto.models.User;
-//import com.example.Avooto.repositories.ProductDao;
 import com.example.Avooto.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 

@@ -50,9 +50,4 @@ public class Product  {
         image.setProduct(this);
         images.add(image);
     }
-
-//    public Long lookViews() throws NullPointerException {
-//        views = Long.valueOf(1);
-//        return views++;
-//    }
 }

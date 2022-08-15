@@ -78,21 +78,12 @@
                 <option value="Товары для животных">Товары для животных</option>
             </select>
         </div>
-<#--        <div class="form-group col-md-2">-->
-<#--            <label for="searchPrice">Сортировать по:</label>-->
-<#--            <select id="searchPrice" required name="price" class="form-control">-->
-<#--                <option value="">Не выбрано</option>-->
-<#--                <option value="searchByDecreasing">Возрастанию</option>-->
-<#--                <option value="searchByIncreasing">Убыванию</option>-->
 
-<#--            </select>-->
-<#--        </div>-->
         <div class="form-group col-md-8">
             <label for="searchWord">Поиск по объявлениям</label>
-<#--            <input type="text" name="title" value="${searchWord}"class="form-control"-->
+
             <input type="text" name="title" <#if searchWord??>value="${searchWord}"</#if> class="form-control"
                    id="searchWord">
-            <#--            было изменено search world на тайтл-->
         </div>
         <button style="width: 100%" type="submit" class="btn btn-dark">Поиск</button>
     </div>

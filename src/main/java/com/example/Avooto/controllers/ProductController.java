@@ -3,7 +3,6 @@ package com.example.Avooto.controllers;
 import com.example.Avooto.dto.ProductDto;
 import com.example.Avooto.models.Product;
 import com.example.Avooto.models.User;
-//import com.example.Avooto.repositories.ProductDao;
 import com.example.Avooto.repositories.ProductJDBC;
 import com.example.Avooto.servicies.ProductService;
 import com.example.Avooto.servicies.UserService;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.security.Principal;
 
@@ -23,26 +23,17 @@ import java.security.Principal;
 public class ProductController {
     private final ProductService productService;
     private final UserService userService;
-//    private final ProductDao productDao;
-    private final ProductJDBC productJDBC;
 
     @GetMapping
     public String products(@RequestParam(name = "title", required = false) String title,
                            @RequestParam(name = "category", required = false) String category,
                            @RequestParam(name = "city", required = false) String city,
                            Principal principal, User user, Model model) {
-//        model.addAttribute("products", productService.getProductsListByResultSet(productDao.searchingByWord(title)));
         model.addAttribute("products", productService.getProductsListByTitle(productService.getTitleFromSearch(title)));
-//        model.addAttribute("products", productJDBC.searchingByWord(title));
-//        model.addAttribute("products", productService.getProductsListByTitle(title));
         model.addAttribute("productsByCategory", productService.getProductsListByCategory(category));
         model.addAttribute("productsByCity", productService.getProductsListByCity(city));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);
-//        model.addAttribute("searchWord", productService.getTitleFromSearch(title));
-//        model.addAttribute("searchWord", productService.getTitleFromSearch(title));
-//        model.addAttribute("sortToDecrease", productService.getProductsByPriceDecreasing(productService.getProductsListByPrice(price)));
-//        model.addAttribute("sortToIncrease", productService.getProductsByPriceIncreasing(productService.getProductsListByPrice(price)));
         return "products";
     }
 

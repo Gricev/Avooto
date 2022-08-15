@@ -1,6 +1,5 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template userByPrincipal>
-<#--    Может измениться отображение автара principal-->
     <h1 style="text-align: center">Информация о пользователе</h1>
     <hr>
     <div style="text-align: center">

@@ -13,7 +13,7 @@ import java.util.*;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "email", unique = true)
@@ -53,10 +53,6 @@ public class User implements UserDetails {
     public void addAvatarToUser(Image avatar) {
         avatar.setUser(this);
         avatars.add(avatar);
-    }
-
-    public void  deleteAvatarFromUser() {
-        avatars.clear();
     }
 
     public boolean isAdmin() {

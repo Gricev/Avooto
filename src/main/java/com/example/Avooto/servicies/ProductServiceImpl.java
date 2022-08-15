@@ -21,12 +21,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductService {
+public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ProductJDBC productJDBC;
-
-
 
     public List<Product> getProductsListByTitle(String title) {
         if (title != null) {
@@ -35,14 +34,6 @@ public class ProductService {
             return productRepository.findAll();
         }
     }
-
-//    public List<Product> getProductsListByResultSet(ResultSet title) {
-//        if (title != null) {
-//            return productRepository.findByResultSet(title);
-//        } else {
-//            return productRepository.findAll();
-//        }
-//    }
 
     public List<Product> getProductsListByCategory(String category) {
         if (category != null) {
@@ -60,17 +51,13 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProductsListByPrice(int price) {
+    public List<Product> getProductsListByPrice(int price) {  //to do filters for search
         if (price != 0) {
             return productRepository.findByPrice(price);
         } else {
             return productRepository.findAll();
         }
     }
-
-//    public List<Product> getProductsListByPriceBetween(int firstPrice, int secondPrice) {
-//
-//    }
 
     public void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3,
@@ -108,31 +95,6 @@ public class ProductService {
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
         productRepository.save(product);
     }
-
-//    public void saveProduct(Principal principal, Product product, List<MultipartFile> files) throws IOException {
-//        product.setUser(getUserByPrincipal(principal));
-//        addImage(files, product);
-//        product.getImages().get(0).setPreviewImage(true);
-//
-//        log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
-//        Product productFromDb = productRepository.save(product);
-//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
-//        productRepository.save(product);
-//    }
-
-//    private void addImage(List<MultipartFile> files, Product product) {
-//        for (MultipartFile file: files) {
-//            if(file.getSize() !=0) {
-//                Image image = null;
-//                try {
-//                    image = toImageEntity(file);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                product.addImageToProduct(image);
-//            }
-//        }
-//    }
 
     public User getUserByPrincipal(Principal principal) {
         if (principal == null) {
@@ -201,27 +163,19 @@ public class ProductService {
         productRepository.save(productAfterUpdate);
     }
 
-    public List<Product> getProductsByPriceDecreasing(List<Product> products) {
+    public List<Product> getProductsByPriceDecreasing(List<Product> products) {              //to do filters for search
         return products.stream()
                 .sorted(Comparator.comparing(Product::getPrice).reversed())
                 .collect(Collectors.toList());
     }
 
-    public List<Product> getProductsByPriceIncreasing(List<Product> products) {
+    public List<Product> getProductsByPriceIncreasing(List<Product> products) {              //to do filters for search
         return products.stream()
                 .sorted(Comparator.comparing(Product::getPrice))
                 .collect(Collectors.toList());
     }
-//
-//    public Product getProductsByPriceDecreasing(List<Product> products) {
-//        return products.stream().max(Comparator.comparing(Product::getPrice)).orElse(null);
-//    }
-//
-//    public Product getProductsByPriceIncreasing(List<Product> products) {
-//        return products.stream().min(Comparator.comparing(Product::getPrice)).orElse(null);
-//    }
 
-    public String getTitleFromSearch(String title) {
+    public String getTitleFromSearch(String title) {                                         //to do filters for search
         productJDBC.searchingByWord(title);
         return title;
     }

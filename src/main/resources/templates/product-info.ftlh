@@ -51,9 +51,7 @@
                 <img src="/static/images/whatsup.png" width="32" height="32" class="rounded-circle"> Связаться с продавцом
         </a>
     </p>
-<#--    <p style="text-align: center">${product.views}</p>-->
     <p style="text-align: center">Дата создания объявления: ${product.dateOfCreated}; |
-<#--        Количество просмотров: ${product.views};-->
     </p>
     <hr>
     <p style="text-align: center">
