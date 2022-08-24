@@ -31,7 +31,7 @@ ___
 
 **About this project**
 
-![](https://disk.yandex.ru/client/disk?idApp=client&amp%3Bdialog=slider&amp%3BidDialog=%2Fdisk%2FScheme.png&dialog=slider&idDialog=%2Fdisk%2FScheme.png)
+![](https://github.com/Gricev/Avooto/blob/master/Scheme.png)
 
 This project is a REST API built on the SOLID principle and a 3-link architecture, i.e. each layer of logic is divided among themselves, and also performs CRUD operations on objects.
 
