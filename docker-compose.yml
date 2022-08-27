@@ -1,0 +1,22 @@
+version: "3"
+services:
+  mysql-standalone:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=!Hhh787898
+      - MYSQL_DATABASE=avooto
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=!Hhh787898
+    ports:
+      - 3307:3306
+
+  crudjdbc:
+    image: 89898152970/crudjdbc:latest
+    ports:
+      - 8086:8086
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql-standalone

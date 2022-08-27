@@ -13,21 +13,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
     private final UserService userService;
+    private final RestTemplate restTemplate;
 
     @GetMapping
     public String products(@RequestParam(name = "title", required = false) String title,
-                           @RequestParam(name = "category", required = false) String category,
                            @RequestParam(name = "city", required = false) String city,
+                           @RequestParam(name = "category", required = false) String category,
                            Principal principal, User user, Model model) {
         model.addAttribute("products", productService.getProductsListByTitle(productService.getTitleFromSearch(title)));
         model.addAttribute("productsByCategory", productService.getProductsListByCategory(category));
@@ -141,4 +144,24 @@ public class ProductController {
         model.addAttribute("userAnyOne", user);
         return "productsByCity";
     }
+
+
+//    @GetMapping
+//    public String productsAll(@RequestParam(name = "title", required = false) String title,
+//                           @RequestParam(name = "city", required = false) String city,
+//                           @RequestParam(name = "category", required = false) String category,
+//                           Principal principal, User user, Model model) {
+//        model.addAttribute("products", productService.ProductsListByTitle(productService.getTitleFromSearch(title)));
+//        model.addAttribute("productsByCategory", productService.getProductsListByCategory(category));
+//        model.addAttribute("productsByCity", productService.getProductsListByCity(city));
+//        model.addAttribute("user", productService.getUserByPrincipal(principal));
+//        model.addAttribute("userAnyOne", user);
+//        return "products";
+//    @GetMapping("/search")
+//    public List<Product> getAllProductsBySearch(@RequestParam(name = "title", required = false) String title,
+//                                                @RequestParam(name = "city", required = false) String city,
+//                                                @RequestParam(name = "category", required = false) String category) {
+//        return (List<Product>) restTemplate.getForObject("http://localhost:8080/product/title/city/category?title={title}&city={city}&category={category}",
+//                Product.class, title, city, category);
+//    }
 }
