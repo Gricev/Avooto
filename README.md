@@ -68,8 +68,7 @@ crudJDBC.jar will be run on localhost:8086
 
 **How to test basic commands in application**
 
-- To create a product: `curl -X POST "<code>[http://localhost:8086/product/save](http://localhost:8086/product/save)
-</code>" -H "accept: /" -H "Content-Type: application/json" -d 
+- To create a product: `curl -X POST "http://localhost:8086/product/save" -H "accept: /" -H "Content-Type: application/json" -d 
 "{
   "id": "",
   "title": "Some title",
