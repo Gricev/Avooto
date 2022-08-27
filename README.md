@@ -68,7 +68,7 @@ crudJDBC.jar will be run on localhost:8086
 
 **How to test basic commands in application**
 
-- `To create a product: curl -X POST "http://localhost:8086/product/save" -H "accept: /" -H "Content-Type: application/json" -d 
+- To create a product: `curl -X POST "http://localhost:8086/product/save" -H "accept: /" -H "Content-Type: application/json" -d 
 "{
   "id": "",
   "title": "Some title",
@@ -82,11 +82,11 @@ crudJDBC.jar will be run on localhost:8086
   "views": "8080"
 }"`
 
-- To get all products: curl -X GET "http://localhost:8086/product" -H "accept: /"
+- To get all products: `curl -X GET "http://localhost:8086/product" -H "accept: /"`
 
-- To get a product by ID: curl -X GET "http://localhost:8086/product/{id}" -H "accept: /"
+- To get a product by ID: `curl -X GET "http://localhost:8086/product/{id}" -H "accept: /"`
 
-- To update a product by ID: curl -X PUT "http://localhost:8086/product/{id}" -H "accept: /" -H "Content-Type: application/json" -d "
+- To update a product by ID: `curl -X PUT "http://localhost:8086/product/{id}" -H "accept: /" -H "Content-Type: application/json" -d "
 {
   "id": "",
   "title": "Some title",
@@ -98,9 +98,9 @@ crudJDBC.jar will be run on localhost:8086
   "previewImageId": "34",
   "dateOfCreated": "2022-08-15T12:07:01.264+00:00",
   "views": "8080"
-}"
+}"`
 
-- To delete product: curl -X DELETE "http://localhost:8086/product/delete/{id}" -H "accept: /"
+- To delete product: `curl -X DELETE "http://localhost:8086/product/delete/{id}" -H "accept: /"`
 
 ___
 
