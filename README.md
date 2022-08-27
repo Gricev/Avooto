@@ -40,7 +40,7 @@ ___
 This project is a REST API built on the SOLID principle and a 3-link architecture, i.e. each layer of logic is divided among themselves, and also performs CRUD operations on objects.
 
 
-Entity--->Repository--->Service--->Controller.
+`Entity--->Repository--->Service--->Controller`
 
 ---
 
