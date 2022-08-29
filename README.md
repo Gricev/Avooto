@@ -26,6 +26,8 @@ It's a CRUD buy-sell project with using Spring Framework.
 ---
 **How to run this application:**
 
+`docker pull mysql`
+
 1. To start you need to install JDK 17 and install ide(Intellij idea, Net Beans and etc.)
 2. Then to create scheme with name "avooto" in your local data base or pull by link dump of my db <https://disk.yandex.ru/d/2qVJWR8_ASxYcQ>;
 
