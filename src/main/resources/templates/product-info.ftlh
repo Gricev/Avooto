@@ -57,7 +57,7 @@
     <p style="text-align: center">
         <a href="/user/${authorProduct.id}">
              <#if user.previewImageId??>
-             <img src="/static/images/avatar/logo/${user.previewImageId}" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
+             <img src="/images/${user.previewImageId}" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
              <#else>
             <img src="/static/images/avatar.png" alt="mdo" width="32" height="32" class="rounded-circle"> ${authorProduct.name}
              </#if>

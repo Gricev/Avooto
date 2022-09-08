@@ -1,12 +1,12 @@
-package com.example.Avooto.servicies;
+package com.example.Avooto.service;
 
 import com.example.Avooto.dto.ProductDto;
-import com.example.Avooto.models.Image;
-import com.example.Avooto.models.Product;
-import com.example.Avooto.models.User;
-import com.example.Avooto.repositories.ProductJDBC;
-import com.example.Avooto.repositories.ProductRepository;
-import com.example.Avooto.repositories.UserRepository;
+import com.example.Avooto.model.Image;
+import com.example.Avooto.model.Product;
+import com.example.Avooto.model.User;
+import com.example.Avooto.repository.ProductRepository;
+import com.example.Avooto.repository.UserRepository;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final ProductJDBC productJDBC;
 
     public List<Product> getProductsListByTitle(String title) {
         if (title != null) {
@@ -37,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getProductsListByCategory(String category) {
         if (category != null) {
-            return productRepository.findByCategory(category);
+            return  productRepository.findByCategory(category);
         } else {
             return productRepository.findAll();
         }
@@ -104,16 +101,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
-        return image;
-    }
-
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
@@ -163,21 +150,14 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(productAfterUpdate);
     }
 
-    public List<Product> getProductsByPriceDecreasing(List<Product> products) {              //to do filters for search
-        return products.stream()
-                .sorted(Comparator.comparing(Product::getPrice).reversed())
-                .collect(Collectors.toList());
-    }
-
-    public List<Product> getProductsByPriceIncreasing(List<Product> products) {              //to do filters for search
-        return products.stream()
-                .sorted(Comparator.comparing(Product::getPrice))
-                .collect(Collectors.toList());
-    }
-
-    public String getTitleFromSearch(String title) {                                         //to do filters for search
-        productJDBC.searchingByWord(title);
-        return title;
+    private Image toImageEntity(MultipartFile file) throws IOException {
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setOriginalFileName(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setBytes(file.getBytes());
+        return image;
     }
 }
 

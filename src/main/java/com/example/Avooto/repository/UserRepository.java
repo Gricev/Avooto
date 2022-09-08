@@ -1,14 +1,9 @@
-package com.example.Avooto.repositories;
+package com.example.Avooto.repository;
 
-import com.example.Avooto.models.User;
+import com.example.Avooto.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.security.Principal;
-
 public interface UserRepository extends JpaRepository<User, Long> {
-
     User findByEmail(String email);
     User findByActivationCode(String code);
-
-
 }

@@ -1,6 +1,6 @@
-package com.example.Avooto.servicies;
+package com.example.Avooto.service;
 
-import com.example.Avooto.repositories.UserRepository;
+import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -5,7 +5,7 @@
     <br>
     <div style="text-align: center">
         <#if user.previewImageId??>
-        <img src="/static/images/avatar/${user.previewImageId}"
+        <img src="/images/${user.previewImageId}"
         style="border:2px solid black; border-radius: 20px" height="120">
         <br>
         <br>

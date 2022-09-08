@@ -1,6 +1,6 @@
 package com.example.Avooto.configuration;
 
-import com.example.Avooto.servicies.UserDetailServiceImpl;
+import com.example.Avooto.service.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
 
 @EnableWebSecurity
@@ -52,15 +51,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        return http
-//                .authorizeRequests()
-//                .mvcMatchers("/design", "/orders").hasRole("USER")
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .and()
 }

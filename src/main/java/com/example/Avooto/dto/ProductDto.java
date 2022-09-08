@@ -1,8 +1,8 @@
 package com.example.Avooto.dto;
 
 
-import com.example.Avooto.models.Image;
-import com.example.Avooto.models.User;
+import com.example.Avooto.model.Image;
+import com.example.Avooto.model.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;

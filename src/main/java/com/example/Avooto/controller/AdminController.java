@@ -1,8 +1,8 @@
-package com.example.Avooto.controllers;
+package com.example.Avooto.controller;
 
-import com.example.Avooto.models.Role;
-import com.example.Avooto.models.User;
-import com.example.Avooto.servicies.UserService;
+import com.example.Avooto.model.Role;
+import com.example.Avooto.model.User;
+import com.example.Avooto.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,14 +23,14 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String admin(Model model, Principal principal) {
-        model.addAttribute("users", userService.list());
+        model.addAttribute("users", userService.showAllFromList());
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "admin";
     }
 
     @PostMapping("/admin/user/ban/{id}")
     public String userBan(@PathVariable("id") Long id) {
-        userService.banUser(id);
+        userService.toBanUser(id);
         return "redirect:/admin";
     }
 

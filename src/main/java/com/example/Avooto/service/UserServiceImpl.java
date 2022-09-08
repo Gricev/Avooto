@@ -1,13 +1,12 @@
-package com.example.Avooto.servicies;
+package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
-import com.example.Avooto.models.Image;
-import com.example.Avooto.models.Role;
-import com.example.Avooto.models.User;
-import com.example.Avooto.repositories.UserRepository;
+import com.example.Avooto.model.Image;
+import com.example.Avooto.model.Role;
+import com.example.Avooto.model.User;
+import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,9 +24,9 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailServiceImpl mailService;
+    private final EmailServiceImpl mailService;
 
+    @Override
     public boolean createUser(User user) {
         String email = user.getEmail();
         if (userRepository.findByEmail(email) != null) {
@@ -54,11 +53,13 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-    public List<User> list() {
+    @Override
+    public List<User> showAllFromList() {
         return userRepository.findAll();
     }
 
-    public void banUser(Long id) {
+    @Override
+    public void toBanUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
             if (user.isActive()) {
@@ -68,10 +69,11 @@ public class UserServiceImpl implements UserService{
                 user.setActive(true);
                 log.info("Unban user with id = {}; email: {}", user.getId(), user.getEmail());
             }
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
+    @Override
     public void changeUserRoles(User user, Map<String, String> form) {
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
@@ -85,11 +87,13 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
+    @Override
     public User getUserByPrincipal(Principal principal) {
         if (principal == null) return new User();
         return userRepository.findByEmail(principal.getName());
     }
 
+    @Override
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
         if (user == null) {
@@ -100,16 +104,7 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-    private Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
-        return image;
-    }
-
+    @Override
     public void changeUserName(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
         userAfterUpdate.setName(userBeforeUpdate.getName());
@@ -117,6 +112,7 @@ public class UserServiceImpl implements UserService{
         userRepository.save(userAfterUpdate);
     }
 
+    @Override
     public void changeUserPhone(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
         userAfterUpdate.setPhoneNumber(userBeforeUpdate.getName());
@@ -136,6 +132,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public void changeUserPassword(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
         userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
@@ -155,6 +152,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public void changeUserAvatar(Principal principal, MultipartFile file) throws IOException {
         User userAfterUpdate = getUserByPrincipal(principal);
         Image avatar;
@@ -168,10 +166,21 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public void deleteAvatar(Principal principal) {
         User user = getUserByPrincipal(principal);
         user.getAvatars().clear();
         userRepository.save(user);
+    }
+
+    private Image toImageEntity(MultipartFile file) throws IOException {
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setOriginalFileName(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setBytes(file.getBytes());
+        return image;
     }
 }
 

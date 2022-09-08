@@ -1,4 +1,4 @@
-package com.example.Avooto.models;
+package com.example.Avooto.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

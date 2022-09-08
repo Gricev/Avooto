@@ -1,13 +1,10 @@
 package com.example.Avooto.dto;
 
-import com.example.Avooto.models.Image;
-import com.example.Avooto.models.Product;
-import com.example.Avooto.models.Role;
+import com.example.Avooto.model.Image;
+import com.example.Avooto.model.Product;
+import com.example.Avooto.model.Role;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

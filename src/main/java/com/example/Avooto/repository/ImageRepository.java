@@ -1,10 +1,9 @@
-package com.example.Avooto.repositories;
+package com.example.Avooto.repository;
 
 
-import com.example.Avooto.models.Image;
+import com.example.Avooto.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
-
 
 }

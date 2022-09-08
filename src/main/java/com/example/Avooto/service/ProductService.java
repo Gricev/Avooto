@@ -1,8 +1,9 @@
-package com.example.Avooto.servicies;
+package com.example.Avooto.service;
 
 import com.example.Avooto.dto.ProductDto;
-import com.example.Avooto.models.Product;
-import com.example.Avooto.models.User;
+import com.example.Avooto.model.Product;
+import com.example.Avooto.model.User;
+import javassist.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface ProductService {
 
     List<Product> getProductsListByTitle(String title);
-    List<Product> getProductsListByCategory(String category);
+    List<Product> getProductsListByCategory(String category) throws NotFoundException;
     List<Product> getProductsListByCity(String city);
     List<Product> getProductsListByPrice(int price);
     void saveProduct(Principal principal, Product product, MultipartFile file1,
@@ -25,8 +26,4 @@ public interface ProductService {
                                   MultipartFile file1, MultipartFile file2,
                                   MultipartFile file3, MultipartFile file4,
                                   MultipartFile file5) throws IOException;
-    List<Product> getProductsByPriceDecreasing(List<Product> products);
-    List<Product> getProductsByPriceIncreasing(List<Product> products);
-    String getTitleFromSearch(String title);
-
 }

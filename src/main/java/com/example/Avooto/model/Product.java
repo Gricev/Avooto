@@ -1,8 +1,7 @@
-package com.example.Avooto.models;
+package com.example.Avooto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;

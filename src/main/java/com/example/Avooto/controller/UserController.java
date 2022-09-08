@@ -1,8 +1,8 @@
-package com.example.Avooto.controllers;
+package com.example.Avooto.controller;
 
 import com.example.Avooto.dto.UserDto;
-import com.example.Avooto.models.User;
-import com.example.Avooto.servicies.UserService;
+import com.example.Avooto.model.User;
+import com.example.Avooto.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

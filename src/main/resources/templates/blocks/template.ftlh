@@ -18,13 +18,14 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
             <a href="/">
-                <span class="navbar-brand mb-0 h1">AVOOTO</span>
+<#--                <span class="navbar-brand mb-0 h1">AVOOTO</span>-->
+                <img src="/static/images/avota.png" alt="mdo">
             </a>
             <#if user.email??>
                 <div class="dropdown text-end">
                     <a href="/profile">
                          <#if user.previewImageId??>
-                        <img src="/static/images/avatar/logo/${user.previewImageId}"
+                        <img src="/images/${user.previewImageId}"
                              width="32" height="32" class="rounded-circle">
                              <#else>
                               <img src="/static/images/avatar.png" alt="mdo"

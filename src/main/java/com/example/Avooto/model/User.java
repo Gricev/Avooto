@@ -1,4 +1,4 @@
-package com.example.Avooto.models;
+package com.example.Avooto.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,10 +39,10 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role",
     joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
     private LocalDateTime dateOfCreated;
 
     @PrePersist

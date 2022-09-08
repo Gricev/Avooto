@@ -1,7 +1,7 @@
-package com.example.Avooto.servicies;
+package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
-import com.example.Avooto.models.User;
+import com.example.Avooto.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.Map;
 public interface UserService {
 
     boolean createUser(User user);
-    List<User> list();
-    void banUser(Long id);
+    List<User> showAllFromList();
+    void toBanUser(Long id);
     void changeUserRoles(User user, Map<String, String> form);
     User getUserByPrincipal(Principal principal);
     boolean activateUser(String code);
