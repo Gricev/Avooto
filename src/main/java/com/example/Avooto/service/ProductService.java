@@ -26,4 +26,5 @@ public interface ProductService {
                                   MultipartFile file1, MultipartFile file2,
                                   MultipartFile file3, MultipartFile file4,
                                   MultipartFile file5) throws IOException;
+
 }

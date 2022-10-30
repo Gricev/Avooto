@@ -5,7 +5,6 @@
     <div class="form-row">
         <div class="form-group col-md-2">
             <label for="searchCity">Город</label>
-<#--            <select id="searchCity"  class="form-control">-->
             <select id="searchCity"  required name="city" class="form-control">
                 <option value="">Город не выбран</option>
                 <option value="Москва">Москва</option>
@@ -18,8 +17,6 @@
         </div>
         <div class="form-group col-md-2">
             <label for="searchCategory">Категория товара</label>
-<#--            <select id="searchCategory"  class="form-control">-->
-<#--            <select id="searchCategory"  name="category" class="form-control">-->
             <select id="searchCategory" required name="category" class="form-control">
                 <option value="">Выберете подходящую категорию</option>
                 <option value="Автомобили">Автомобили</option>
