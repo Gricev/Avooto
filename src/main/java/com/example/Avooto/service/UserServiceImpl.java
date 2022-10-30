@@ -162,7 +162,6 @@ public class UserServiceImpl implements UserService{
             userAfterUpdate.addAvatarToUser(avatar);
             userAfterUpdate.setPreviewImageId(userAfterUpdate.getAvatars().get(0).getId());
             userRepository.save(userAfterUpdate);
-
         }
     }
 
@@ -170,6 +169,7 @@ public class UserServiceImpl implements UserService{
     public void deleteAvatar(Principal principal) {
         User user = getUserByPrincipal(principal);
         user.getAvatars().clear();
+        user.setPreviewImageId(null);
         userRepository.save(user);
     }
 

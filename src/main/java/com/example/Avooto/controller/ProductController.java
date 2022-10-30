@@ -26,12 +26,13 @@ public class ProductController {
 
     @GetMapping
     public String getMainPage(@RequestParam(name = "title", required = false) String title,
-                           @RequestParam(name = "city", required = false) String city,
-                           @RequestParam(name = "category", required = false) String category,
-                           Principal principal, User user, Model model) throws NotFoundException {
-        model.addAttribute("products", productService.getProductsListByTitle(title));
-        model.addAttribute("productsByCategory", productService.getProductsListByCategory(category));
-        model.addAttribute("productsByCity", productService.getProductsListByCity(city));
+                              @RequestParam(name = "city", required = false) String city,
+                              @RequestParam(name = "category", required = false) String category,
+                              @RequestParam(name = "minPrice", required = false) Integer minPrice,
+                              @RequestParam(name = "maxPrice", required = false) Integer maxPrice,
+                              Principal principal, User user, Model model) {
+        model.addAttribute("products", productService.getProductsListByTitleCityCategoryPrice(title, city,
+                category, minPrice, maxPrice));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);
         return "products";
@@ -48,7 +49,6 @@ public class ProductController {
         model.addAttribute("images", product.getImages());
         model.addAttribute("authorProduct", product.getUser());
         model.addAttribute("phone", user.getPhoneNumber());
-//        model.addAttribute("views", product.lookViews());
         return "product-info";
     }
 

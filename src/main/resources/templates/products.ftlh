@@ -5,7 +5,8 @@
     <div class="form-row">
         <div class="form-group col-md-2">
             <label for="searchCity">Город</label>
-            <select id="searchCity" required name="city" class="form-control">
+<#--            <select id="searchCity"  class="form-control">-->
+            <select id="searchCity"  required name="city" class="form-control">
                 <option value="">Город не выбран</option>
                 <option value="Москва">Москва</option>
                 <option value="Красноярск">Красноярск</option>
@@ -17,6 +18,8 @@
         </div>
         <div class="form-group col-md-2">
             <label for="searchCategory">Категория товара</label>
+<#--            <select id="searchCategory"  class="form-control">-->
+<#--            <select id="searchCategory"  name="category" class="form-control">-->
             <select id="searchCategory" required name="category" class="form-control">
                 <option value="">Выберете подходящую категорию</option>
                 <option value="Автомобили">Автомобили</option>
@@ -78,8 +81,20 @@
                 <option value="Товары для животных">Товары для животных</option>
             </select>
         </div>
+        <div class="form-group col-md-2">
+            <label for="searchPrice">Цена, руб.</label>
+            <input type="number" name="minPrice" placeholder="от" class="form-control"
+                   id="searchMinPrice">
+        </div>
 
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-2">
+            <label for="searchPrice">-</label>
+            <input type="number" name="maxPrice" placeholder="до" class="form-control"
+                   id="searchMaxPrice">
+        </div>
+
+
+        <div class="form-group col-md-4">
             <label for="searchWord">Поиск по объявлениям</label>
 
             <input type="text" name="title" <#if searchWord??>value="${searchWord}"</#if> class="form-control"

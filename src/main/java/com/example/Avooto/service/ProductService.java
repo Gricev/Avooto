@@ -12,10 +12,10 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProductsListByTitle(String title);
+    List<Product> getProductsListByTitleCityCategoryPrice(String title, String city, String category, Integer minPrice,
+                                                     Integer maxPrice);
     List<Product> getProductsListByCategory(String category) throws NotFoundException;
     List<Product> getProductsListByCity(String city);
-    List<Product> getProductsListByPrice(int price);
     void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3,
                             MultipartFile file4, MultipartFile file5) throws IOException;

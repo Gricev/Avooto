@@ -24,13 +24,21 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public List<Product> getProductsListByTitle(String title) {
-        if (title != null) {
-            return productRepository.findByTitle(title);
-        } else {
-            return productRepository.findAll();
+    public List<Product> getProductsListByTitleCityCategoryPrice(String title, String city, String category,
+                                                            Integer minPrice, Integer maxPrice) {
+              if (title != null && city != null && category != null && minPrice == null && maxPrice == null) {
+                  return productRepository.findByTitleContainsAndCityAndCategory(title, city, category);
+              } else if (title == null && city != null && category != null && minPrice == null && maxPrice == null) {
+                  return productRepository.findByCityAndCategory(city, category);
+              } else if (title != null && city != null && category != null && minPrice != null && maxPrice != null) {
+                  return productRepository.findByTitleContainsAndCityAndCategoryAndPriceBetween(title, city, category,
+                          minPrice, maxPrice);
+              } else if (title == null && city != null && category != null && minPrice != null && maxPrice != null) {
+                  return productRepository.findByCityAndCategoryAndPriceBetween(city, category, minPrice, maxPrice);
+              } else {
+                  return productRepository.findAll();
+            }
         }
-    }
 
     public List<Product> getProductsListByCategory(String category) {
         if (category != null) {
@@ -43,14 +51,6 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsListByCity(String city) {
         if (city != null) {
             return productRepository.findByCity(city);
-        } else {
-            return productRepository.findAll();
-        }
-    }
-
-    public List<Product> getProductsListByPrice(int price) {  //to do filters for search
-        if (price != 0) {
-            return productRepository.findByPrice(price);
         } else {
             return productRepository.findAll();
         }
