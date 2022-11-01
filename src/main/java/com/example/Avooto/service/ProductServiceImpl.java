@@ -26,16 +26,18 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsListByTitleCityCategoryPrice(String title, String city, String category,
                                                             Integer minPrice, Integer maxPrice) {
               if (title != null && city != null && category != null && minPrice == null && maxPrice == null) {
-                  return productRepository.findByTitleContainsAndCityAndCategory(title, city, category);
+                  return productRepository.findByTitleContainsAndCityAndCategoryOrderByDateOfCreatedDesc(
+                          title, city, category);
               } else if (title == null && city != null && category != null && minPrice == null && maxPrice == null) {
                   return productRepository.findByCityAndCategory(city, category);
               } else if (title != null && city != null && category != null && minPrice != null && maxPrice != null) {
-                  return productRepository.findByTitleContainsAndCityAndCategoryAndPriceBetween(title, city, category,
+                  return productRepository.findByTitleContainsAndCityAndCategoryAndPriceBetweenOrderByDateOfCreatedDesc(
+                          title, city, category,
                           minPrice, maxPrice);
               } else if (title == null && city != null && category != null && minPrice != null && maxPrice != null) {
                   return productRepository.findByCityAndCategoryAndPriceBetween(city, category, minPrice, maxPrice);
               } else {
-                  return productRepository.findAll();
+                  return productRepository.findAllByOrderByDateOfCreatedDesc();
             }
         }
 

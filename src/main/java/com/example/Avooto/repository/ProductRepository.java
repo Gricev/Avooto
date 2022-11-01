@@ -8,11 +8,12 @@ import java.util.List;
 @Repository
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByTitleContainsAndCityAndCategory(String title, String city, String category);
-    List<Product> findByTitleContainsAndCityAndCategoryAndPriceBetween(String title, String city, String category,
+    List<Product> findByTitleContainsAndCityAndCategoryOrderByDateOfCreatedDesc(String title, String city, String category);
+    List<Product> findByTitleContainsAndCityAndCategoryAndPriceBetweenOrderByDateOfCreatedDesc(String title, String city, String category,
                                                                        Integer minPrice, Integer maxPrice);
     List<Product> findByCityAndCategoryAndPriceBetween(String city, String category, Integer minPrice, Integer maxPrice);
     List<Product> findByCityAndCategory(String city, String category);
     List<Product> findByCategory(String category);
     List<Product> findByCity(String city);
+    List<Product> findAllByOrderByDateOfCreatedDesc();
 }
