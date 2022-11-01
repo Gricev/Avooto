@@ -6,7 +6,6 @@ import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
 import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -159,5 +158,7 @@ public class ProductServiceImpl implements ProductService {
         image.setBytes(file.getBytes());
         return image;
     }
+
+
 }
 

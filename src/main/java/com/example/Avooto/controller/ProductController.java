@@ -9,10 +9,7 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,13 +21,13 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/")
     public String getMainPage(@RequestParam(name = "title", required = false) String title,
                               @RequestParam(name = "city", required = false) String city,
                               @RequestParam(name = "category", required = false) String category,
                               @RequestParam(name = "minPrice", required = false) Integer minPrice,
                               @RequestParam(name = "maxPrice", required = false) Integer maxPrice,
-                              Principal principal, User user, Model model) {
+                              Principal principal, User user,  Model model) {
         model.addAttribute("products", productService.getProductsListByTitleCityCategoryPrice(title, city,
                 category, minPrice, maxPrice));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
@@ -105,6 +102,7 @@ public class ProductController {
         model.addAttribute("images", product.getImages());
         model.addAttribute("title", product.getTitle());
         model.addAttribute("city", product.getCity());
+        model.addAttribute("category", product.getCategory());
         model.addAttribute("description", product.getDescription());
         model.addAttribute("price", product.getPrice());
         model.addAttribute("products", user.getProducts());

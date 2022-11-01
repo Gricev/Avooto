@@ -10,9 +10,9 @@
     <div class="collapse mb-3" id="collapseExample" style="">
     <form action="/product/edit/${productId}" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="searchCategory">Категория товара</label>
-            <select id="searchCategory" required name="category" class="form-control">
-                <option value="">Выберете подходящую категорию</option>
+            <label for="category">Категория товара</label>
+            <select id="category" autofocus name="category"  class="form-control">
+                <option selected value="${category}">${category}</option>
                 <option value="Автомобили">Автомобили</option>
                 <option value="Мотоциклы и мототехника">Мотоциклы и мототехника</option>
                 <option value="Грузовики и спецтехника">Грузовики и спецтехника</option>
@@ -87,22 +87,21 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="searchCity">Город</label>
-            <select id="searchCity"  required name="city" class="form-control">
-                <option value="">Город не выбран</option>
-
+            <label for="city">Город</label>
+            <select id="city" autofocus name="city" class="form-control">
+                <option selected value="${city}">${city}</option>
                 <option value="Москва">Москва</option>
                 <option value="Красноярск">Красноярск</option>
                 <option value="Казань">Казань</option>
                 <option value="Санкт-Петербург">Санкт-Петербург</option>
                 <option value="Краснодар">Краснодар</option>
                 <option value="Ростов на Дону">Ростов на Дону</option>
-
             </select>
         </div>
         <div class="form-group">
             <label for="description">Описание товара</label>
-            <textarea required class="form-control" text="${description}"  id="description" name="description"></textarea>
+<#--            <input type="text" value="${title}" required class="form-control"-->
+            <textarea name="${description}" required class="form-control"></textarea>
         </div>
         <div class="form-group">
             <div class="custom-file">

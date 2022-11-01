@@ -4,7 +4,7 @@
     <hr>
     <div style="text-align: center">
         <#if user.previewImageId??>
-        <img src="/static/images/avatar/${user.previewImageId}"
+        <img src="/images/${user.previewImageId}"
              style="border:2px solid black; border-radius: 20px" height="120">
         <br>
         <br>
@@ -17,6 +17,11 @@
         <h2>${user.name}</h2>
         <br>
         Номер телефона: <b>${user.phoneNumber}</b>
+        <p style="text-align: center">
+            <a href="https://wa.clck.bar/${user.phoneNumber}">
+                <img src="/static/images/whatsup.png" width="32" height="32" class="rounded-circle"> Связаться с продавцом
+            </a>
+        </p>
     </div>
     <br>
     <hr>

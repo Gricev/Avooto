@@ -16,8 +16,7 @@
 <#--    </a>-->
         <form action="/profile/edit/avatar/delete" method="post">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <button type="submit" class="btn btn-danger m-3">
-                Удалить аватар
+            <button type="submit" class="btn btn-danger m-3" style="text-align: center; width: 100%">Удалить аватар
             </button>
         </form>
         <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"

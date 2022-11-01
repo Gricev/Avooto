@@ -155,11 +155,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public void changeUserAvatar(Principal principal, MultipartFile file) throws IOException {
         User userAfterUpdate = getUserByPrincipal(principal);
-        Image avatar;
         if (file.getSize() != 0) {
-            avatar = toImageEntity(file);
+            Image avatar = toImageEntity(file);
             avatar.setPreviewImage(true);
             userAfterUpdate.addAvatarToUser(avatar);
+            userRepository.save(userAfterUpdate);
             userAfterUpdate.setPreviewImageId(userAfterUpdate.getAvatars().get(0).getId());
             userRepository.save(userAfterUpdate);
         }
