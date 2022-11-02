@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -41,7 +43,8 @@ public class UserServiceImpl implements UserService{
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Здравствуйте, %s! \n" +
-                            "Добро пожаловать на AVOOTO, для перехода на сайт нажмите: http://localhost:8112/activate/%s" +
+                            "Добро пожаловать на AVOOTO, для подтверждения аккаунта на сайе, нажмите: " +
+                            "http://localhost:8112/activate/%s" +
                             " your password: " + user.getPassword(),
                     user.getEmail(),
                     user.getActivationCode()
@@ -181,6 +184,12 @@ public class UserServiceImpl implements UserService{
         image.setSize(file.getSize());
         image.setBytes(file.getBytes());
         return image;
+    }
+
+    @Override
+    public void deleteUser(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        userRepository.delete(user);
     }
 }
 

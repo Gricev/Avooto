@@ -2,7 +2,7 @@
 <@t.template user>
     <h1 style="text-align: center">Редактирование профиля</h1>
     <hr>
-    <a class="btn btn-danger mt-3 mb-3" style="text-align: center; width: 100%"
+    <a class="btn btn-dark mt-3 mb-3" style="text-align: center; width: 100%"
        data-toggle="collapse" href="#collapseExample" role="button"
        aria-expanded="true" aria-controls="collapseExample">
         Приступим?
@@ -10,10 +10,6 @@
 
     <div class="collapse mb-3" id="collapseExample" style="">
 
-<#--    <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"-->
-<#--       href="/profile/edit/avatar/delete">-->
-<#--        Удалить  аватар-->
-<#--    </a>-->
         <form action="/profile/edit/avatar/delete" method="post">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <button type="submit" class="btn btn-danger m-3" style="text-align: center; width: 100%">Удалить аватар
@@ -35,5 +31,9 @@
        href="/profile/edit/phone">
         Редактировать номер телефона
     </a>
+        <a class="btn btn-danger mb-3" style="text-align: center; width: 100%"
+           href="/profile/edit/delete">
+            Удалить профиль
+        </a>
         </div>
 </@t.template>

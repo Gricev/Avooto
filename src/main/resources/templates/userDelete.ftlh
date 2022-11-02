@@ -1,13 +1,13 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Авторизация</h1>
+    <h1 style="text-align: center">Подтверждение удаления аккаунта</h1>
     <hr>
-    <form action="/login " method="post">
+    <form action="/profile/edit/delete " method="post">
         <div class="form-group">
             <label for="email">Электронная почта</label>
             <input type="email" class="form-control <#if RequestParameters.error??>is-invalid</#if>" id="email" name="username">
             <div id="email" class="invalid-feedback">
-                Неверная электронная почта или аккаунт не подтверждён. Проверьте электронный адрес.
+                Неверная электронная почта
             </div>
         </div>
         <div class="form-group">
@@ -18,8 +18,8 @@
             </div>
         </div>
         <input type="hidden" name="_csrf" value="${_csrf.token}">
-        <button type="submit" style="width: 100%" class="btn btn-dark">Войти</button>
+        <button type="submit" style="width: 100%" class="btn btn-dark">Подтвердить удаление</button>
+    </form>
     </form>
     <hr>
-    <h3><a href="/registration">Регистрация</a></h3>
 </@t.template>

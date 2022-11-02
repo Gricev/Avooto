@@ -22,4 +22,5 @@ public interface UserService {
     void changeUserPassword(Principal principal, UserDto userBeforeUpdate);
     void changeUserAvatar(Principal principal, MultipartFile file) throws IOException;
     void deleteAvatar(Principal principal);
+    void deleteUser(Principal principal);
 }

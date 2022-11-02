@@ -21,6 +21,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(Principal principal, Model model) {
+        String code = userService.getUserByPrincipal(principal).getActivationCode();
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "login";
     }
@@ -139,5 +140,18 @@ public class UserController {
     public String deleteUserProfileAvatar(Principal principal) {
         userService.deleteAvatar(principal);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/edit/delete")
+    public String deleteUserGet(Principal principal, Model model) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", user);
+        return "userDelete";
+    }
+
+    @PostMapping("/profile/edit/delete")
+    public String deleteUserPost(Principal principal) {
+        userService.deleteUser(principal);
+        return "redirect:/";
     }
 }
