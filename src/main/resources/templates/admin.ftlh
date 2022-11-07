@@ -1,6 +1,15 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    `<h1 style="text-align: center">Панель администратора</h1><hr>
+    <h1 style="text-align: center">Панель администратора</h1><hr>
+    <form method="get" action="/admin">
+        <div class="form-group col-md-3">
+            <label for="searchUser">введите id пользователя</label>
+            <input type="number" name="id" class="form-control"
+                   id="searchUser">
+        </div>
+        <button style="width: 25%" type="submit" class="btn btn-dark">Поиск</button>
+    </form>
+    <hr>
     <table class="table table-hover table-dark">
         <tr>
             <th scope="col">Email</th>
@@ -10,6 +19,7 @@
             <th scope="col">Бан</th>
             <th scope="col">Редактирование</th>
             <th scope="col">Подробная информация</th>
+            <th scope="col">Удалить пользователя</th>
         </tr>
         <#list users as user>
             <tr>
@@ -25,6 +35,12 @@
                 </th>
                 <th><a href="/admin/user/edit/${user.id}">Редактировние</a></th>
                 <th><a href="/user/${user.id}">Подробная информация</a></th>
+                <th>
+                     <form action="/admin/user/delete/${user.id}" method="post">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}">
+                          <input type="submit" class="btn btn-light" value="Удалить пользователя">
+                        </form>
+                </th>
             </tr>
         <#else>
             <h3>Пользователей нет</h3>

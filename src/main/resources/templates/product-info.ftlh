@@ -38,13 +38,13 @@
     </div>
     <hr>
     <a href="/product/category/${product.category}">
-        <p><h1 style="text-align: center">${product.category}</h1></p>
+        <p><h3 style="text-align: center">${product.category}</h3></p>
     </a>
-    <p><h1 style="text-align: center">${product.title} | ${product.price} ₽</h1></p>
+    <p><h2 style="text-align: center">${product.title} | ${product.price} ₽</h2></p>
     <p style="text-align: center">${product.description}</p>
     <p style="text-align: center">Номер телефона продавца: <b>${authorProduct.phoneNumber}</b></p>
     <a href="/product/city/${product.city}">
-        <p><h1 style="text-align: center">${product.city}</h1></p>
+        <p><h3 style="text-align: center">${product.city}</h3></p>
     </a>
     <p style="text-align: center">
         <a href="https://wa.clck.bar/${phone}">

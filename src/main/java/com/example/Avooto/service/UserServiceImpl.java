@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService{
             userRepository.save(user);
         }
     }
+
 
     @Override
     public void changeUserRoles(User user, Map<String, String> form) {
@@ -190,6 +191,18 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(Principal principal) {
         User user = getUserByPrincipal(principal);
         userRepository.delete(user);
+    }
+
+    @Override
+    public List<User> findUserById(Long id) {
+        if (id != null)
+            return Collections.singletonList(userRepository.findById(id).orElse(null));
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void deleteUserFromAdminPanel(Long id) {
+        userRepository.deleteById(id);
     }
 }
 

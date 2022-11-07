@@ -12,7 +12,6 @@ import java.util.Map;
 public interface UserService {
 
     boolean createUser(User user);
-    List<User> showAllFromList();
     void toBanUser(Long id);
     void changeUserRoles(User user, Map<String, String> form);
     User getUserByPrincipal(Principal principal);
@@ -23,4 +22,6 @@ public interface UserService {
     void changeUserAvatar(Principal principal, MultipartFile file) throws IOException;
     void deleteAvatar(Principal principal);
     void deleteUser(Principal principal);
+    List<User> findUserById(Long id);
+    void deleteUserFromAdminPanel(Long id);
 }
