@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -111,8 +112,9 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit/password")
-    public String editUserProfilePassword(Principal principal, UserDto user) {
-        userService.changeUserPassword(principal, user);
+    public String editUserProfilePassword(@RequestParam(name = "pass") String password,
+            Principal principal, UserDto user) {
+        userService.changeUserPassword(principal, user, password);
         return "redirect:/profile";
     }
 
@@ -150,8 +152,10 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit/delete")
-    public String deleteUserPost(Principal principal) {
-        userService.deleteUser(principal);
+    public String deleteUserPost(Principal principal,
+                                 @RequestParam(name = "email") String email,
+                                 @RequestParam(name = "password") String password) {
+        userService.deleteUser(principal, email, password);
         return "redirect:/";
     }
 }

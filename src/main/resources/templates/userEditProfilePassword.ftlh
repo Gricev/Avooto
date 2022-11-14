@@ -4,6 +4,10 @@
     <hr>
     <form action="/profile/edit/password" method="post">
         <div class="form-group">
+            <label for="productName">Введите старый пароль</label>
+            <input type="password"  required class="form-control" name="pass">
+        </div>
+        <div class="form-group">
             <label for="productName">Введите новый пароль</label>
             <input type="password"  required class="form-control" name="password">
         </div>

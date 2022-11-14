@@ -52,13 +52,8 @@ public class AdminController {
     }
 
     @PostMapping("/admin/user/delete/{id}")
-    public String userDelete(@PathVariable("id") Long id) throws Exception {
-        List<User> user = userService.findUserById(id);
-        if (user.contains(Role.ROLE_ADMIN)) {
-            throw new Exception("У вас нет на это доступа");
-        } else {
+    public String userDelete(@PathVariable("id") Long id)  {
             userService.deleteUserFromAdminPanel(id);
-        }
         return "redirect:/admin";
     }
 }

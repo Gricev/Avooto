@@ -3,12 +3,10 @@ package com.example.Avooto.dto;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
 import com.example.Avooto.model.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class UserDto {
@@ -22,4 +20,6 @@ public class UserDto {
     private String activationCode;
     private Set<Role> roles = new HashSet<>();
     private List<Product> products = new ArrayList<>();
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private Date dateOfCreated;
 }

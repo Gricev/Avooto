@@ -18,10 +18,11 @@ public interface UserService {
     boolean activateUser(String code);
     void changeUserName(Principal principal, UserDto userBeforeUpdate);
     void changeUserPhone(Principal principal, UserDto userBeforeUpdate);
-    void changeUserPassword(Principal principal, UserDto userBeforeUpdate);
+//    void changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password);
+    boolean changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password);
     void changeUserAvatar(Principal principal, MultipartFile file) throws IOException;
     void deleteAvatar(Principal principal);
-    void deleteUser(Principal principal);
+    boolean deleteUser(Principal principal, String email, String password);
     List<User> findUserById(Long id);
     void deleteUserFromAdminPanel(Long id);
 }

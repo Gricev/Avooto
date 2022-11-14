@@ -6,19 +6,19 @@ import com.example.Avooto.model.Role;
 import com.example.Avooto.model.User;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -54,11 +54,6 @@ public class UserServiceImpl implements UserService {
             mailService.sendSimpleMessage(user.getEmail(), "Активация аккаунта AVOOTO", message);
         }
         return true;
-    }
-
-    @Override
-    public List<User> showAllFromList() {
-        return userRepository.findAll();
     }
 
     @Override
@@ -136,24 +131,48 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+//    @Override
+//    public void changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password) {
+//        User userAfterUpdate = getUserByPrincipal(principal);
+//        userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
+//        userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
+//        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+//            String message = String.format(
+//                    "Здравствуйте, %s! \n" +
+//                            "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
+//                            " Ваш новый пароль: " + userAfterUpdate.getPassword(),
+//                    userAfterUpdate.getEmail(),
+//                    userAfterUpdate.getActivationCode()
+//            );
+//            userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
+//            log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
+//            userRepository.save(userAfterUpdate);
+//            mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+//        }
+//    }
+
     @Override
-    public void changeUserPassword(Principal principal, UserDto userBeforeUpdate) {
+    public boolean changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password) {
         User userAfterUpdate = getUserByPrincipal(principal);
-        userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
-        userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
-        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
-            String message = String.format(
-                    "Здравствуйте, %s! \n" +
-                            "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
-                            " Ваш новый пароль: " + userAfterUpdate.getPassword(),
-                    userAfterUpdate.getEmail(),
-                    userAfterUpdate.getActivationCode()
-            );
-            userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
-            log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
-            userRepository.save(userAfterUpdate);
-            mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+        if (passwordEncoder.matches(password, userAfterUpdate.getPassword())) {
+            userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
+            userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
+            if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+                String message = String.format(
+                        "Здравствуйте, %s! \n" +
+                                "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
+                                " Ваш новый пароль: " + userAfterUpdate.getPassword(),
+                        userAfterUpdate.getEmail(),
+                        userAfterUpdate.getActivationCode()
+                );
+                userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
+                log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
+                userRepository.save(userAfterUpdate);
+                mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+            }
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -188,9 +207,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Principal principal) {
+    public boolean deleteUser(Principal principal, String email, String password) {
         User user = getUserByPrincipal(principal);
-        userRepository.delete(user);
+        if (email.equals(user.getEmail()) && passwordEncoder.matches(password, user.getPassword())) {
+            userRepository.delete(user);
+            return true;
+        }
+        return false;
     }
 
     @Override

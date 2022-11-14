@@ -5,11 +5,13 @@ import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
 import com.example.Avooto.service.ProductService;
 import com.example.Avooto.service.UserService;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -124,7 +126,7 @@ public class ProductController {
 
     @GetMapping("/product/category/{category}")
     public String getProductsByCategory(@PathVariable(value = "category") String category,
-                                        Principal principal, User user, Model model) throws NotFoundException {
+                                        Principal principal, User user, Model model)  {
         model.addAttribute("products", productService.getProductsListByCategory(category));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);

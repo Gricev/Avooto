@@ -5,7 +5,7 @@
     <form action="/profile/edit/delete " method="post">
         <div class="form-group">
             <label for="email">Электронная почта</label>
-            <input type="email" class="form-control <#if RequestParameters.error??>is-invalid</#if>" id="email" name="username">
+            <input type="email" class="form-control <#if RequestParameters.error??>is-invalid</#if>" id="email" name="email">
             <div id="email" class="invalid-feedback">
                 Неверная электронная почта
             </div>
