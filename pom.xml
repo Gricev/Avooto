@@ -17,31 +17,9 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-
-<!--		<dependency>-->
-<!--			<groupId>org.hibernate</groupId>-->
-<!--			<artifactId>hibernate-core</artifactId>-->
-<!--			<version>6.1.5.Final</version>-->
-<!--			<type>pom</type>-->
-<!--		</dependency>-->
-
-		<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-oauth2-client</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.fasterxml.jackson.core</groupId>-->
-<!--			<artifactId>jackson-databind</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-actuator</artifactId>-->
-<!--&lt;!&ndash;			<version>2.7.3</version>&ndash;&gt;-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>2.7.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,24 +34,15 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.data</groupId>-->
-<!--			<artifactId>spring-data-jpa</artifactId>-->
-<!--			<version>2.7.5</version>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>2.7.5</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>2.0.0-alpha0</version>
-			<scope>runtime</scope>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.0-alpha1</version>
 		</dependency>
 
 		<dependency>
@@ -100,7 +69,6 @@
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-			<version>3.0.15.RELEASE</version>
 		</dependency>
 	</dependencies>
 
@@ -109,13 +77,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.7.4</version>
 				<configuration>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>2.7.4</version>
 						</exclude>
 					</excludes>
 				</configuration>

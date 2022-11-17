@@ -113,8 +113,9 @@ public class UserController {
 
     @PostMapping("/profile/edit/password")
     public String editUserProfilePassword(@RequestParam(name = "pass") String password,
-            Principal principal, UserDto user) {
-        userService.changeUserPassword(principal, user, password);
+                                          @RequestParam(name = "passRep") String passwordRepeat,
+                                          Principal principal, UserDto user) {
+        userService.changeUserPassword(principal, user, password, passwordRepeat);
         return "redirect:/profile";
     }
 

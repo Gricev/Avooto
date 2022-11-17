@@ -131,46 +131,29 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    @Override
-//    public void changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password) {
-//        User userAfterUpdate = getUserByPrincipal(principal);
-//        userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
-//        userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
-//        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
-//            String message = String.format(
-//                    "Здравствуйте, %s! \n" +
-//                            "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
-//                            " Ваш новый пароль: " + userAfterUpdate.getPassword(),
-//                    userAfterUpdate.getEmail(),
-//                    userAfterUpdate.getActivationCode()
-//            );
-//            userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
-//            log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
-//            userRepository.save(userAfterUpdate);
-//            mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
-//        }
-//    }
-
     @Override
-    public boolean changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password) {
+    public boolean changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password, String passwordRepeat) {
         User userAfterUpdate = getUserByPrincipal(principal);
         if (passwordEncoder.matches(password, userAfterUpdate.getPassword())) {
             userAfterUpdate.setPassword(userBeforeUpdate.getPassword());
-            userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
-            if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
-                String message = String.format(
-                        "Здравствуйте, %s! \n" +
-                                "Ваш пароль был успешно изменен, для перехода на сайт, нажмите: http://localhost:8112/activate/%s" +
-                                " Ваш новый пароль: " + userAfterUpdate.getPassword(),
-                        userAfterUpdate.getEmail(),
-                        userAfterUpdate.getActivationCode()
-                );
-                userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
-                log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
-                userRepository.save(userAfterUpdate);
-                mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+            if (userAfterUpdate.getPassword().equals(passwordRepeat)) {
+                userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
+                if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+                    String message = String.format(
+                            "Здравствуйте, %s! \n" +
+                                    "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
+                                    " http://localhost:8112/activate/%s" +
+                                    " Ваш новый пароль: " + userAfterUpdate.getPassword(),
+                            userAfterUpdate.getEmail(),
+                            userAfterUpdate.getActivationCode()
+                    );
+                    userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
+                    log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(userAfterUpdate.getPassword()));
+                    userRepository.save(userAfterUpdate);
+                    mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение пароля AVOOTO", message);
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -178,6 +161,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeUserAvatar(Principal principal, MultipartFile file) throws IOException {
         User userAfterUpdate = getUserByPrincipal(principal);
+        userAfterUpdate.getAvatars().clear();
         if (file.getSize() != 0) {
             Image avatar = toImageEntity(file);
             avatar.setPreviewImage(true);

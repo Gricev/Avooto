@@ -10,14 +10,9 @@
 
     <div class="collapse mb-3" id="collapseExample" style="">
 
-        <form action="/profile/edit/avatar/delete" method="post">
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <button type="submit" class="btn btn-danger m-3" style="text-align: center; width: 100%">Удалить аватар
-            </button>
-        </form>
         <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"
            href="/profile/edit/avatar/change">
-            Добавить аватар
+            Редактировать аватар
             </a>
     <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"
        href="/profile/edit/password">

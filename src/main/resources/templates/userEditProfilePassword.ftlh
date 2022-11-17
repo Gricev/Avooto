@@ -12,6 +12,10 @@
             <input type="password"  required class="form-control" name="password">
         </div>
         <div class="form-group">
+            <label for="productName">Повторите новый пароль</label>
+            <input type="password"  required class="form-control" name="passRep">
+        </div>
+        <div class="form-group">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <button type="submit" style="width: 100%" class="btn btn-dark">Редактировать</button>
         </div>
