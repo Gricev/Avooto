@@ -130,6 +130,7 @@ public class ProductController {
         model.addAttribute("products", productService.getProductsListByCategory(category));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);
+        model.addAttribute("category", category);
         return "productsByCategory";
     }
 
@@ -139,6 +140,7 @@ public class ProductController {
         model.addAttribute("products", productService.getProductsListByCity(city));
         model.addAttribute("user", productService.getUserByPrincipal(principal));
         model.addAttribute("userAnyOne", user);
+        model.addAttribute("city", city);
         return "productsByCity";
     }
 }

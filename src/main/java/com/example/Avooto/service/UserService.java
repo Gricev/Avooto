@@ -18,7 +18,6 @@ public interface UserService {
     boolean activateUser(String code);
     void changeUserName(Principal principal, UserDto userBeforeUpdate);
     void changeUserPhone(Principal principal, UserDto userBeforeUpdate);
-//    void changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password);
     boolean changeUserPassword(Principal principal, UserDto userBeforeUpdate, String password, String passwordRepeat);
     void changeUserAvatar(Principal principal, MultipartFile file) throws IOException;
     void deleteAvatar(Principal principal);

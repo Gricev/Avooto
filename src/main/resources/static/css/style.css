@@ -8,3 +8,26 @@
     text-decoration: none
 
 }
+
+img {
+    object-fit: cover;
+}
+
+.topbutton {
+    width:100px;
+    border:2px solid #ccc;
+    background:#424242;
+    text-align:center;
+    padding:10px;
+    position:fixed;
+    bottom:50px;
+    left:50px;
+    cursor:pointer;
+    color:#cccccc;
+    font-family:verdana;
+    font-size:12px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+}

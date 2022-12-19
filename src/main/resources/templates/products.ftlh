@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-<h1 style="text-align: center">Поиск товаров</h1><hr>
+<h2 style="text-align: center">Поиск товаров</h2><hr>
 <form method="get" action="/">
     <div class="form-row">
         <div class="form-group col-md-2">
@@ -423,7 +423,7 @@
         <a href="/product/${product.id}/${product.user.id}" class="product-link">
             <div class="card text-white bg-dark my-3 product ">
 
-                <img src="/images/${product.previewImageId}"
+                <img width="200" height="200" src="/images/${product.previewImageId}"
                      class="card-img-top">
                 <div class="card-body">
                     <h5 class="card-title">${product.title}</h5>
@@ -438,7 +438,8 @@
             </div>
         </a>
     <#else>
-        <h1 style="text-align: center">Не найдено</h1>
+        <h3 style="text-align: center">Товаров не найдено</h3>
     </#list>
+    <a href="#" title="Вернуться к началу" class="topbutton">Наверх</a>
 </div>
 </@t.template>

@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Поиск товаров по категориям</h1><hr>
+    <h2 style="text-align: center">Поиск товаров по категории ${category}</h2><hr>
 <hr>
 <div class="card-columns">
     <#list products as product>

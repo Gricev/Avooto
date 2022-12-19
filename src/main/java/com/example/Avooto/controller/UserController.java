@@ -22,7 +22,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(Principal principal, Model model) {
-        String code = userService.getUserByPrincipal(principal).getActivationCode();
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "login";
     }
@@ -116,8 +115,8 @@ public class UserController {
                                           @RequestParam(name = "passRep") String passwordRepeat,
                                           Principal principal, UserDto user) {
         userService.changeUserPassword(principal, user, password, passwordRepeat);
-        return "redirect:/profile";
-    }
+            return "redirect:/profile";
+        }
 
     @GetMapping("/profile/edit/avatar/delete")
     public String editUserProfileAvatar(Principal principal, Model model) {

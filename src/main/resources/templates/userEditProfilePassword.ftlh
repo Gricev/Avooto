@@ -20,7 +20,7 @@
             <button type="submit" style="width: 100%" class="btn btn-dark">Редактировать</button>
         </div>
     </form>
-    <#if errorMessage??>
-        <h2 style="color: red">${errorMessage}</h2>
+    <#if message??>
+        <h2 style="color: red">${message}</h2>
     </#if>
 </@t.template>

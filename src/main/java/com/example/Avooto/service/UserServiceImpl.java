@@ -1,6 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
+import com.example.Avooto.exception.UserNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Role;
 import com.example.Avooto.model.User;
@@ -58,7 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void toBanUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(
+                "Пользователь не найден с id " + id));
         if (user != null) {
             if (user.isActive()) {
                 user.setActive(false);
@@ -203,7 +205,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findUserById(Long id) {
         if (id != null)
-            return Collections.singletonList(userRepository.findById(id).orElse(null));
+            return Collections.singletonList(userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(
+                    "Пользователь не найден с id " + id)));
         return userRepository.findAll();
     }
 
