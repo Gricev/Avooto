@@ -1,7 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
-import com.example.Avooto.exception.UserNotFoundException;
+import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Role;
 import com.example.Avooto.model.User;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void toBanUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "Пользователь не найден с id " + id));
         if (user != null) {
             if (user.isActive()) {
@@ -205,7 +205,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findUserById(Long id) {
         if (id != null)
-            return Collections.singletonList(userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(
+            return Collections.singletonList(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                     "Пользователь не найден с id " + id)));
         return userRepository.findAll();
     }
@@ -214,9 +214,55 @@ public class UserServiceImpl implements UserService {
     public void deleteUserFromAdminPanel(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public boolean sendUserMail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false;
+        } else {
+            Random random = new Random();
+            int rage = 9999;
+            int generator = random.nextInt(rage);
+            user.setForgetPasswordNumb(generator);
+            userRepository.save(user);
+            if (!StringUtils.isEmpty(user.getEmail())) {
+                String message = String.format(
+                        "Здравствуйте, %s! \n" +
+                                "Для изменения пароля - введите код : " +
+                                user.getForgetPasswordNumb(),
+                        user.getEmail());
+                mailService.sendSimpleMessage(user.getEmail(), "Код восстановления доступа", message);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean userMailNumbCompare(Integer forgetPasswordNumber, String password, String passwordRepeat) {
+        User user = userRepository.findByForgetPasswordNumb(forgetPasswordNumber);
+        if (user == null) {
+            return false;
+        } else {
+            if (password.equals(passwordRepeat)) {
+                user.setPassword(password);
+                user.setActivationCode(UUID.randomUUID().toString());
+                userRepository.save(user);
+                if (!StringUtils.isEmpty(user.getEmail())) {
+                    String message = String.format(
+                            "Здравствуйте, %s! \n" +
+                                    "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
+                                    " http://localhost:8112/activate/%s" +
+                                    " Ваш новый пароль: " + user.getPassword(),
+                            user.getEmail(),
+                            user.getActivationCode());
+                    mailService.sendSimpleMessage(user.getEmail(), "Изменение пароля AVOOTO", message);
+                    user.setPassword(passwordEncoder.encode(password));
+                    log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(user.getPassword()));
+                    userRepository.save(user);
+                }
+            }
+        }
+        return true;
+    }
 }
-
-
-
-
-

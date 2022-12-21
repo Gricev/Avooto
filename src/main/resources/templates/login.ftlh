@@ -21,5 +21,7 @@
         <button type="submit" style="width: 100%" class="btn btn-dark">Войти</button>
     </form>
     <hr>
-    <h3><a href="/registration">Регистрация</a></h3>
+    <h5><a href="/registration">Регистрация</a></h5>
+    <h5><a href="/forgetPassword">Забыли пароль?</a></h5>
+
 </@t.template>

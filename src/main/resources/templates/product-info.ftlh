@@ -1,5 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template userByPrincipal>
+    <h2 style="text-align: center">О товаре</h2><hr>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <#list images as image>
@@ -41,7 +42,9 @@
         <p><h3 style="text-align: center">${product.category}</h3></p>
     </a>
     <p><h2 style="text-align: center">${product.title} | ${product.price} ₽</h2></p>
+    <hr>
     <p style="text-align: center">${product.description}</p>
+    <hr>
     <p style="text-align: center">Номер телефона продавца: <b>${authorProduct.phoneNumber}</b></p>
     <a href="/product/city/${product.city}">
         <p><h3 style="text-align: center">${product.city}</h3></p>
@@ -51,7 +54,7 @@
                 <img src="/static/images/whatsup.png" width="32" height="32" class="rounded-circle"> Связаться с продавцом
         </a>
     </p>
-    <p style="text-align: center">Дата создания объявления: ${product.dateOfCreated}; |
+    <p style="text-align: center">Дата создания объявления: ${date}
     </p>
     <hr>
     <p style="text-align: center">

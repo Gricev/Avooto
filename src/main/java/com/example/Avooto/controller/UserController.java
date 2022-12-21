@@ -158,4 +158,50 @@ public class UserController {
         userService.deleteUser(principal, email, password);
         return "redirect:/";
     }
+
+    @GetMapping("/forgetPassword")
+    public String forgetPasswordGet(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        return "forgetPassword";
+    }
+
+    @PostMapping("/forgetPassword")
+    public String forgetPasswordPost(Principal principal,
+                                     @RequestParam(name = "username") String email, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        if (!userService.sendUserMail(email)) {
+            model.addAttribute("errorMessage", "Указанный электронный адрес неверный, либо не существует");
+            return "forgetPassword";
+        }
+//        userService.sendUserMail(email);
+        return "redirect:/forgetPasswordNumb";
+    }
+
+//    @PostMapping("/forgetPassword")
+//    public String forgetPasswordPost(Principal principal,
+//                                     @RequestParam(name = "username") String email, Model model) {
+//        model.addAttribute("user", userService.getUserByPrincipal(principal));
+//        userService.sendUserMail(email);
+//        return "redirect:/forgetPasswordNumb";
+//    }
+
+    @GetMapping("/forgetPasswordNumb")
+    public String forgetPasswordNumbGet(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        return "forgetPasswordNumb";
+    }
+
+    @PostMapping("/forgetPasswordNumb")
+    public String forgetPasswordNumbPost(Principal principal,
+                                         @RequestParam(name = "forgetPasswordNumber") Integer forgetPassNum,
+                                         @RequestParam(name = "password") String password,
+                                         @RequestParam(name = "passwordRepeat") String passwordRepeat,
+                                         Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        if (!userService.userMailNumbCompare(forgetPassNum, password, passwordRepeat)) {
+            model.addAttribute("errorMessage", "Неверный код доступа, либо пароли не совпадают");
+            return "forgetPasswordNumb";
+        }
+        return "redirect:/login";
+    }
 }

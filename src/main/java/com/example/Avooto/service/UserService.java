@@ -24,4 +24,7 @@ public interface UserService {
     boolean deleteUser(Principal principal, String email, String password);
     List<User> findUserById(Long id);
     void deleteUserFromAdminPanel(Long id);
+    boolean sendUserMail(String email);
+    boolean userMailNumbCompare(Integer forgetPasswordNumber, String password, String passwordRepeat);
+//    void nonAuthorizedUserEditPassword(User user, String password, String RepeatPassword);
 }

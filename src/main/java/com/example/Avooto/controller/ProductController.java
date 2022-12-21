@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,6 +50,7 @@ public class ProductController {
         model.addAttribute("images", product.getImages());
         model.addAttribute("authorProduct", product.getUser());
         model.addAttribute("phone", user.getPhoneNumber());
+        model.addAttribute("date", user.getDateOfCreated().format(DateTimeFormatter.ISO_LOCAL_DATE));
         return "product-info";
     }
 
@@ -72,6 +75,13 @@ public class ProductController {
         productService.saveProduct(principal, product, file1, file2, file3, file4, file5);
         return "redirect:/my/products";
     }
+
+//    @PostMapping("/product/create")
+//    public String createProduct(@RequestParam("files") List<MultipartFile> files,
+//                                Product product, Principal principal) throws IOException {
+//        productService.saveProduct(principal, product, files);
+//        return "redirect:/my/products";
+//    }
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {

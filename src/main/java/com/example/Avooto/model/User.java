@@ -34,6 +34,8 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "activation_code")
     private String activationCode;
+    @Column(name = "forgetPasswordNumb")
+    private int forgetPasswordNumb;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role",

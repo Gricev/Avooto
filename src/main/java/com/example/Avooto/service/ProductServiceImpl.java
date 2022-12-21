@@ -1,6 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.ProductDto;
+import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -88,6 +90,14 @@ public class ProductServiceImpl implements ProductService {
             product.addImageToProduct(image5);
         }
 
+//    public void saveProduct(Principal principal, Product product, List<MultipartFile> files) throws IOException {
+//        product.setUser(getUserByPrincipal(principal));
+//        Image images;
+//        if (files.getSize() != 0) {
+//            images = toImageEntity(files);
+//            images.setPreviewImage(true);
+//            product.addImageToProduct(images);
+//        }
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepository.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
@@ -107,14 +117,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Товар не найден с id "
+        + id));
+
     }
 
     public void changeProductInfo(Long id, ProductDto productBeforeUpdate,
                                   MultipartFile file1, MultipartFile file2,
                                   MultipartFile file3, MultipartFile file4,
                                   MultipartFile file5) throws IOException {
-        Product productAfterUpdate = productRepository.findById(id).orElseThrow();
+        Product productAfterUpdate = productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(
+                "Товар не найден с id " + id));
         Image image1;
         Image image2;
         Image image3;
@@ -141,7 +154,8 @@ public class ProductServiceImpl implements ProductService {
             image5 = toImageEntity(file5);
             productAfterUpdate.addImageToProduct(image5);
         }
-        log.info("User edited exist product. Title: {}; Author email: {}", productAfterUpdate.getTitle(), productAfterUpdate.getUser().getEmail());
+        log.info("User edited exist product. Title: {}; Author email: {}", productAfterUpdate.getTitle(),
+                productAfterUpdate.getUser().getEmail());
         productAfterUpdate.setTitle(productBeforeUpdate.getTitle());
         productAfterUpdate.setPrice(productBeforeUpdate.getPrice());
         productAfterUpdate.setCity(productBeforeUpdate.getCity());
@@ -150,6 +164,11 @@ public class ProductServiceImpl implements ProductService {
         productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
         productRepository.save(productAfterUpdate);
     }
+
+//    @Override
+//    public List<Product> getProductsOrderByDesc(Principal principal) {
+//        return productRepository.findAllByUserIsTrueByOrderByDateOfCreatedDesc(principal);
+//    }
 
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
@@ -160,7 +179,5 @@ public class ProductServiceImpl implements ProductService {
         image.setBytes(file.getBytes());
         return image;
     }
-
-
 }
 

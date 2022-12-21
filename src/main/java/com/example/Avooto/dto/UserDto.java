@@ -22,4 +22,5 @@ public class UserDto {
     private List<Product> products = new ArrayList<>();
     @JsonFormat(pattern = "dd.MM.yyyy")
     private Date dateOfCreated;
+    private String forgetPasswordNumb;
 }
