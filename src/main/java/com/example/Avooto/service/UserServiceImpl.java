@@ -35,9 +35,11 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email) != null) {
             return false;
         }
+        int passwordNumDefault = 1234;
+        user.setForgetPasswordNumb(passwordNumDefault);
         user.setActive(true);
         user.setPassword(user.getPassword());
-        user.getRoles().add(Role.ROLE_USER);
+        user.getRoles().add(Role.ROLE_ADMIN);
         user.setActivationCode(UUID.randomUUID().toString());
         log.info("Saving new User with email: {}", email);
         userRepository.save(user);
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
                             "Добро пожаловать на AVOOTO, для подтверждения аккаунта на сайе, нажмите: " +
                             "http://localhost:8112/activate/%s" +
                             " your password: " + user.getPassword(),
-                    user.getEmail(),
+                    user.getName(),
                     user.getActivationCode()
             );
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -124,7 +126,7 @@ public class UserServiceImpl implements UserService {
                             "Ваш телефон был успешно изменен, если это были не Вы, перейдите по ссылке и " +
                             "измените пароль: http://localhost:8112/activate/%s" +
                             " Ваш новый телефон: " + userAfterUpdate.getPhoneNumber(),
-                    userAfterUpdate.getEmail(),
+                    userAfterUpdate.getName(),
                     userAfterUpdate.getActivationCode()
             );
             log.info("Saving changes in Repo. Phone-number: {}; ", userAfterUpdate.getPhoneNumber());
@@ -146,7 +148,7 @@ public class UserServiceImpl implements UserService {
                                     "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
                                     " http://localhost:8112/activate/%s" +
                                     " Ваш новый пароль: " + userAfterUpdate.getPassword(),
-                            userAfterUpdate.getEmail(),
+                            userAfterUpdate.getName(),
                             userAfterUpdate.getActivationCode()
                     );
                     userAfterUpdate.setPassword(passwordEncoder.encode(userBeforeUpdate.getPassword()));
@@ -231,7 +233,7 @@ public class UserServiceImpl implements UserService {
                         "Здравствуйте, %s! \n" +
                                 "Для изменения пароля - введите код : " +
                                 user.getForgetPasswordNumb(),
-                        user.getEmail());
+                        user.getName());
                 mailService.sendSimpleMessage(user.getEmail(), "Код восстановления доступа", message);
             }
         }
@@ -241,10 +243,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean userMailNumbCompare(Integer forgetPasswordNumber, String password, String passwordRepeat) {
         User user = userRepository.findByForgetPasswordNumb(forgetPasswordNumber);
-        if (user == null) {
+        if (user == null | !password.equals(passwordRepeat)) {
             return false;
         } else {
-            if (password.equals(passwordRepeat)) {
                 user.setPassword(password);
                 user.setActivationCode(UUID.randomUUID().toString());
                 userRepository.save(user);
@@ -254,14 +255,13 @@ public class UserServiceImpl implements UserService {
                                     "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
                                     " http://localhost:8112/activate/%s" +
                                     " Ваш новый пароль: " + user.getPassword(),
-                            user.getEmail(),
+                            user.getName(),
                             user.getActivationCode());
                     mailService.sendSimpleMessage(user.getEmail(), "Изменение пароля AVOOTO", message);
                     user.setPassword(passwordEncoder.encode(password));
                     log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(user.getPassword()));
                     userRepository.save(user);
                 }
-            }
         }
         return true;
     }

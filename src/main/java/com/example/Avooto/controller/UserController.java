@@ -173,17 +173,8 @@ public class UserController {
             model.addAttribute("errorMessage", "Указанный электронный адрес неверный, либо не существует");
             return "forgetPassword";
         }
-//        userService.sendUserMail(email);
         return "redirect:/forgetPasswordNumb";
     }
-
-//    @PostMapping("/forgetPassword")
-//    public String forgetPasswordPost(Principal principal,
-//                                     @RequestParam(name = "username") String email, Model model) {
-//        model.addAttribute("user", userService.getUserByPrincipal(principal));
-//        userService.sendUserMail(email);
-//        return "redirect:/forgetPasswordNumb";
-//    }
 
     @GetMapping("/forgetPasswordNumb")
     public String forgetPasswordNumbGet(Principal principal, Model model) {

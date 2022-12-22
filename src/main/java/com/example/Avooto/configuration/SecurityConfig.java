@@ -1,6 +1,6 @@
 package com.example.Avooto.configuration;
 
-import com.example.Avooto.service.UserDetailServiceForOrder1Impl;
+import com.example.Avooto.service.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailServiceForOrder1Impl userDetailsService;
+    private final UserDetailServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
