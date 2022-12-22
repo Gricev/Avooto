@@ -1,8 +1,10 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h2 style="text-align: center">Мои товары</h1>
+    <h2 style="text-align: center">Мои товары</h2>
     <hr>
-
+    <#if errorMessage??>
+        <h5 style="color: red">${errorMessage}</h5>
+    </#if>
     <div class="card-columns">
         <#list products as product>
             <a href="/product/${product.id}/${product.user.id}" class="product-link">

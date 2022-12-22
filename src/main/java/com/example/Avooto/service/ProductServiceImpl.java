@@ -90,14 +90,6 @@ public class ProductServiceImpl implements ProductService {
             product.addImageToProduct(image5);
         }
 
-//    public void saveProduct(Principal principal, Product product, List<MultipartFile> files) throws IOException {
-//        product.setUser(getUserByPrincipal(principal));
-//        Image images;
-//        if (files.getSize() != 0) {
-//            images = toImageEntity(files);
-//            images.setPreviewImage(true);
-//            product.addImageToProduct(images);
-//        }
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepository.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
@@ -164,11 +156,6 @@ public class ProductServiceImpl implements ProductService {
         productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
         productRepository.save(productAfterUpdate);
     }
-
-//    @Override
-//    public List<Product> getProductsOrderByDesc(Principal principal) {
-//        return productRepository.findAllByUserIsTrueByOrderByDateOfCreatedDesc(principal);
-//    }
 
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();

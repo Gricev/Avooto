@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h2 style="text-align: center">Изменить информацию о товаре</h1>
+    <h2 style="text-align: center">Изменить информацию о товаре</h2>
     <hr>
     <a class="btn btn-dark mt-3 mb-3" style="text-align: center; width: 100%"
        data-toggle="collapse" href="#collapseExample" role="button"
@@ -80,7 +80,7 @@
         <div class="form-group">
             <label for="price">Цена товара</label>
             <div class="input-group mb-3">
-                <input type="number" value="${price}" required class="form-control" id="price" name="price">
+                <input type="number"  value="${price}" required class="form-control" id="price" name="price">
                 <div class="input-group-append">
                     <span class="input-group-text">₽</span>
                 </div>
@@ -99,10 +99,11 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="description">Описание товара</label>
-<#--            <input type="text" value="${title}" required class="form-control"-->
-            <textarea name="${description}" required class="form-control"></textarea>
+            <label for="productName">Описание товара</label>
+            <input type="text" value="${description}" required class="form-control"
+                   id="productName" name="description">
         </div>
+        <hr>
         <div class="form-group">
             <div class="custom-file">
                 <input required type="file" name="file1" id="file1">

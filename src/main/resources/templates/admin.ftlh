@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h2 style="text-align: center">Панель администратора</h1><hr>
+    <h2 style="text-align: center">Панель администратора</h2><hr>
     <form method="get" action="/admin">
         <div class="form-group col-md-3">
             <label for="searchUser">введите id пользователя</label>

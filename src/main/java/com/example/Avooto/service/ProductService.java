@@ -18,7 +18,6 @@ public interface ProductService {
     void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3,
                             MultipartFile file4, MultipartFile file5) throws IOException;
-//    void saveProduct(Principal principal, Product product, List<MultipartFile> files) throws IOException;
     User getUserByPrincipal(Principal principal);
     void deleteProduct(Long id);
     Product getProductById(Long id);
@@ -26,5 +25,4 @@ public interface ProductService {
                                   MultipartFile file1, MultipartFile file2,
                                   MultipartFile file3, MultipartFile file4,
                                   MultipartFile file5) throws IOException;
-//    List<Product> getProductsOrderByDesc(Principal principal);
 }

@@ -120,6 +120,11 @@ public class ProductController {
         model.addAttribute("products", user.getProducts());
         model.addAttribute("product", product);
         model.addAttribute("productId", product.getId());
+        if ( !product.getUser().equals(user)) {
+            model.addAttribute("errorMessage", "На чужой каравай рот не разевай, " +
+                    user.getName() + " !");
+            return "my-products";
+        }
         return "product-edit";
     }
 
@@ -129,10 +134,18 @@ public class ProductController {
                                          @RequestParam("file3") MultipartFile file3,
                                          @RequestParam("file4") MultipartFile file4,
                                          @RequestParam("file5") MultipartFile file5,
-                                         ProductDto product) throws IOException {
-        productService.changeProductInfo(id, product, file1, file2, file3, file4, file5);
-        return "redirect:/my/products";
-    }
+                                         ProductDto product, Principal principal, Model model) throws IOException {
+        Product productUser = productService.getProductById(id);
+        User user = userService.getUserByPrincipal(principal);
+        if (!productUser.getUser().equals(user)) {
+            model.addAttribute("errorMessage", "На чужой каравай рот не разевай, " +
+                    user.getName() + " !");
+            return "my-products";
+        }
+            productService.changeProductInfo(id, product, file1, file2, file3, file4, file5);
+            return "redirect:/my/products";
+        }
+
 
     @GetMapping("/product/category/{category}")
     public String getProductsByCategory(@PathVariable(value = "category") String category,
