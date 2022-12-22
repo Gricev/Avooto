@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Регистрация</h1>
+    <h2 style="text-align: center">Регистрация</h2>
     <hr>
     <form action="/registration" method="post">
         <div class="form-group">

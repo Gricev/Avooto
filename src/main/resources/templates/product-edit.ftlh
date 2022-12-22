@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Изменить информацию о товаре</h1>
+    <h2 style="text-align: center">Изменить информацию о товаре</h1>
     <hr>
     <a class="btn btn-dark mt-3 mb-3" style="text-align: center; width: 100%"
        data-toggle="collapse" href="#collapseExample" role="button"

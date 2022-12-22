@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-<h1 style="text-align: center">Авторизация</h1>
+<h2 style="text-align: center">Авторизация</h2>
 <hr>
 <form action="/forgetPassword" method="post">
     <div class="form-group">

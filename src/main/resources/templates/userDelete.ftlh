@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Подтверждение удаления аккаунта</h1>
+    <h2 style="text-align: center">Подтверждение удаления аккаунта</h2>
     <hr>
     <form action="/profile/edit/delete " method="post">
         <div class="form-group">

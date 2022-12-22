@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Редактирование аватара</h1>
+    <h2 style="text-align: center">Редактирование аватара</h2>
     <hr>
     <form action="/profile/edit/avatar/change" method="post" enctype="multipart/form-data">
         <div class="custom-file">

@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template userByPrincipal>
-    <h1 style="text-align: center">Информация о пользователе</h1>
+    <h2 style="text-align: center">Информация о пользователе</h2>
     <hr>
     <div style="text-align: center">
         <#if user.previewImageId??>

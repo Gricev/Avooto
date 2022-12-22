@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Редактирование номера телефона</h1>
+    <h2 style="text-align: center">Редактирование номера телефона</h2>
     <hr>
     <form action="/profile/edit/password" method="post">
         <div class="form-group">

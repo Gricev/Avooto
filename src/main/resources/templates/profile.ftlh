@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Личный кабинет</h1>
+    <h2 style="text-align: center">Личный кабинет</h2>
     <hr>
     <br>
     <div style="text-align: center">

@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Удаление аватара</h1>
+    <h2 style="text-align: center">Удаление аватара</h2>
     <hr>
     <form action="/profile/edit/avatar/delete" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>

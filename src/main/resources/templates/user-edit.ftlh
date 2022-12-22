@@ -1,6 +1,6 @@
 <#import "blocks/template.ftlh" as t>
 <@t.template user>
-    <h1 style="text-align: center">Редактирование пользователя ${userany.name}</h1><hr>
+    <h2 style="text-align: center">Редактирование пользователя ${userany.name}</h2><hr>
     <form action="/admin/user/edit" method="post">
         <#list roles as role>
             <div>
