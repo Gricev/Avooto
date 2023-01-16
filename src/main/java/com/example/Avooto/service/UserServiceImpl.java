@@ -3,8 +3,10 @@ package com.example.Avooto.service;
 import com.example.Avooto.dto.UserDto;
 import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
+import com.example.Avooto.model.Product;
 import com.example.Avooto.model.Role;
 import com.example.Avooto.model.User;
+import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProductService productService;
+    private final ProductRepository productRepository;
 
     private final EmailServiceImpl mailService;
 
@@ -264,5 +268,32 @@ public class UserServiceImpl implements UserService {
                 }
         }
         return true;
+    }
+
+    @Override
+    public void addProductToFavorite(Principal principal, Long id) {
+        User user = getUserByPrincipal(principal);
+        Product product = productService.getProductById(id);
+        user.getFavoriteProducts().add(product);
+        userRepository.save(user);
+    }
+
+    List<Product> favoriteProducts = new ArrayList<>();
+
+    @Override
+    public List<Product> getProductListFavorite(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        user.setFavoriteProducts(favoriteProducts);
+        userRepository.save(user);
+        return user.getFavoriteProducts();
+    }
+
+    @Override
+    public void deleteProductFromListFavorite(Principal principal, Long id) {
+        Product product = productService.getProductById(id);
+        User user = getUserByPrincipal(principal);
+        user.getFavoriteProducts().remove(product);
+        userRepository.save(user);
+
     }
 }

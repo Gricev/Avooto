@@ -17,5 +17,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategory(String category);
     List<Product> findByCity(String city);
     List<Product> findAllByOrderByDateOfCreatedDesc();
-
 }

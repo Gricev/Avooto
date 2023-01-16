@@ -1,6 +1,7 @@
 package com.example.Avooto.controller;
 
 import com.example.Avooto.dto.UserDto;
+import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
 import com.example.Avooto.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -70,16 +71,14 @@ public class UserController {
 
     @GetMapping("/profile/edit")
     public String editUserInfo(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "userEditProfile";
     }
 
     @GetMapping("/profile/edit/username")
     public String editUserProfileUserName(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
-        model.addAttribute("username", user.getName());
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("username", userService.getUserByPrincipal(principal).getName());
         return "userEditProfileUserName";
     }
 
@@ -91,9 +90,8 @@ public class UserController {
 
     @GetMapping("/profile/edit/phone")
     public String editUserProfilePhoneNumber(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
-        model.addAttribute("phone", user.getPhoneNumber());
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("phone", userService.getUserByPrincipal(principal).getPhoneNumber());
         return "userEditProfilePhoneNumber";
     }
 
@@ -105,8 +103,7 @@ public class UserController {
 
     @GetMapping("/profile/edit/password")
     public String editUserProfilePassword(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "userEditProfilePassword";
     }
 
@@ -120,15 +117,13 @@ public class UserController {
 
     @GetMapping("/profile/edit/avatar/delete")
     public String editUserProfileAvatar(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "userEditProfileAvatarDelete";
     }
 
     @GetMapping("/profile/edit/avatar/change")
     public String deleteUserProfileAvatar(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "userEditProfileAvatar";
     }
 
@@ -146,8 +141,7 @@ public class UserController {
 
     @GetMapping("/profile/edit/delete")
     public String deleteUserGet(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "userDelete";
     }
 

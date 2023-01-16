@@ -14,8 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -26,26 +27,26 @@ public class ProductServiceImpl implements ProductService {
     private final UserRepository userRepository;
 
     public List<Product> getProductsListByTitleCityCategoryPrice(String title, String city, String category,
-                                                            Integer minPrice, Integer maxPrice) {
-              if (title != null && city != null && category != null && minPrice == null && maxPrice == null) {
-                  return productRepository.findByTitleContainsAndCityAndCategoryOrderByDateOfCreatedDesc(
-                          title, city, category);
-              } else if (title == null && city != null && category != null && minPrice == null && maxPrice == null) {
-                  return productRepository.findByCityAndCategory(city, category);
-              } else if (title != null && city != null && category != null && minPrice != null && maxPrice != null) {
-                  return productRepository.findByTitleContainsAndCityAndCategoryAndPriceBetweenOrderByDateOfCreatedDesc(
-                          title, city, category,
-                          minPrice, maxPrice);
-              } else if (title == null && city != null && category != null && minPrice != null && maxPrice != null) {
-                  return productRepository.findByCityAndCategoryAndPriceBetween(city, category, minPrice, maxPrice);
-              } else {
-                  return productRepository.findAllByOrderByDateOfCreatedDesc();
-            }
+                                                                 Integer minPrice, Integer maxPrice) {
+        if (title != null && city != null && category != null && minPrice == null && maxPrice == null) {
+            return productRepository.findByTitleContainsAndCityAndCategoryOrderByDateOfCreatedDesc(
+                    title, city, category);
+        } else if (title == null && city != null && category != null && minPrice == null && maxPrice == null) {
+            return productRepository.findByCityAndCategory(city, category);
+        } else if (title != null && city != null && category != null && minPrice != null && maxPrice != null) {
+            return productRepository.findByTitleContainsAndCityAndCategoryAndPriceBetweenOrderByDateOfCreatedDesc(
+                    title, city, category,
+                    minPrice, maxPrice);
+        } else if (title == null && city != null && category != null && minPrice != null && maxPrice != null) {
+            return productRepository.findByCityAndCategoryAndPriceBetween(city, category, minPrice, maxPrice);
+        } else {
+            return productRepository.findAllByOrderByDateOfCreatedDesc();
         }
+    }
 
     public List<Product> getProductsListByCategory(String category) {
         if (category != null) {
-            return  productRepository.findByCategory(category);
+            return productRepository.findByCategory(category);
         } else {
             return productRepository.findAll();
         }
@@ -58,6 +59,19 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.findAll();
         }
     }
+
+//    @Override
+//    public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
+//        product.setUser(getUserByPrincipal(principal));
+//        List<Image> imageList;
+//        if (!files.isEmpty()) {
+//            imageList = toImageEntityToList(files);
+//            product.addImageListToProduct(imageList);
+//        }
+//        Product productFromDb = productRepository.save(product);
+//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
+//        productRepository.save(product);
+//    } to do in future
 
     public void saveProduct(Principal principal, Product product, MultipartFile file1,
                             MultipartFile file2, MultipartFile file3,
@@ -109,8 +123,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Товар не найден с id "
-        + id));
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Товар не найден с id "
+                + id));
 
     }
 
@@ -118,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
                                   MultipartFile file1, MultipartFile file2,
                                   MultipartFile file3, MultipartFile file4,
                                   MultipartFile file5) throws IOException {
-        Product productAfterUpdate = productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(
+        Product productAfterUpdate = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "Товар не найден с id " + id));
         Image image1;
         Image image2;
@@ -165,6 +179,20 @@ public class ProductServiceImpl implements ProductService {
         image.setSize(file.getSize());
         image.setBytes(file.getBytes());
         return image;
+    }
+
+    private List<Image> toImageEntityToList(List<MultipartFile> files) {
+        List<Image> images = new ArrayList<>();
+            Stream<Object> objectList = files.stream().map(e -> {
+            try {
+                return toImageEntity(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            return e;
+        });
+        images.add((Image) objectList);
+        return images;
     }
 }
 

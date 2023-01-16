@@ -1,6 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
+import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,5 +27,8 @@ public interface UserService {
     void deleteUserFromAdminPanel(Long id);
     boolean sendUserMail(String email);
     boolean userMailNumbCompare(Integer forgetPasswordNumber, String password, String passwordRepeat);
-//    void nonAuthorizedUserEditPassword(User user, String password, String RepeatPassword);
+    void addProductToFavorite(Principal principal, Long id);
+    List<Product> getProductListFavorite(Principal principal);
+    void deleteProductFromListFavorite(Principal principal, Long id);
+
 }

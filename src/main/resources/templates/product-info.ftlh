@@ -26,8 +26,9 @@
                     </div>
                 </div>
             </#list>
-
         </div>
+        <hr>
+
         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
@@ -37,6 +38,13 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+    <hr>
+    <form action="/product/favorite/add/${product.id}" method="post">
+        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+        <button type="submit" style="text-align: center; width: 100%" class="btn btn-dark mb-2">
+            Добавить в избранное
+        </button>
+    </form>
     <hr>
     <a href="/product/category/${product.category}">
         <p><h3 style="text-align: center">${product.category}</h3></p>

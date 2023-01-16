@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "products")
@@ -50,5 +51,10 @@ public class Product  {
     public void addImageToProduct(Image image)  {
         image.setProduct(this);
         images.add(image);
+    }
+
+    public void addImageListToProduct(List<Image> img) {
+        img.stream().iterator().next().setProduct(this);
+        images.add((Image) img);
     }
 }

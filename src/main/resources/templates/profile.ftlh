@@ -29,6 +29,10 @@
             </a><br>
         </#if>
         <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"
+           href="/product/favorite">
+            Избранные товары
+        </a>
+        <a class="btn btn-dark mb-3" style="text-align: center; width: 100%"
            href="/profile/edit">
             Редактировать  профиль
         </a>

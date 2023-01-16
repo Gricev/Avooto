@@ -79,9 +79,9 @@ public class ProductController {
 //    @PostMapping("/product/create")
 //    public String createProduct(@RequestParam("files") List<MultipartFile> files,
 //                                Product product, Principal principal) throws IOException {
-//        productService.saveProduct(principal, product, files);
+//        productService.saveProductList(principal, files, product);
 //        return "redirect:/my/products";
-//    }
+//    } to do in future
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
@@ -91,9 +91,8 @@ public class ProductController {
 
     @GetMapping("/my/products")
     public String userProducts(Principal principal, Model model) {
-        User user = productService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
-        model.addAttribute("products", user.getProducts());
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("products", userService.getUserByPrincipal(principal).getProducts());
         return "my-products";
     }
 
@@ -120,6 +119,11 @@ public class ProductController {
         model.addAttribute("products", user.getProducts());
         model.addAttribute("product", product);
         model.addAttribute("productId", product.getId());
+        model.addAttribute("file1", product.getImages().get(0).getId());
+        model.addAttribute("file2", product.getImages().get(1).getId());
+        model.addAttribute("file3", product.getImages().get(2).getId());
+        model.addAttribute("file4", product.getImages().get(3).getId());
+        model.addAttribute("file5", product.getImages().get(4).getId());
         if ( !product.getUser().equals(user)) {
             model.addAttribute("errorMessage", "На чужой каравай рот не разевай, " +
                     user.getName() + " !");
@@ -165,5 +169,25 @@ public class ProductController {
         model.addAttribute("userAnyOne", user);
         model.addAttribute("city", city);
         return "productsByCity";
+    }
+
+    @GetMapping("/product/favorite")
+    public String showFavoriteProducts(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
+        return "favorite-products";
+    }
+
+    @PostMapping("/product/favorite/add/{id}")
+    public String addProductToFavoriteList(@PathVariable("id") Long id, Principal principal, Model model) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        userService.addProductToFavorite(principal, id);
+        return "redirect:/product/favorite";
+    }
+
+    @PostMapping("/product/favorite/delete/{id}")
+    public String deleteFavoriteFromProducts(@PathVariable("id") Long id, Principal principal) {
+        userService.deleteProductFromListFavorite(principal, id);
+        return "redirect:/product/favorite";
     }
 }

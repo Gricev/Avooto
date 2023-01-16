@@ -31,3 +31,11 @@ img {
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
 }
+
+/* _custom-forms.scss:240 */
+.custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 0;
+}

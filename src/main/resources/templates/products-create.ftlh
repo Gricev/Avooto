@@ -418,36 +418,34 @@
             <label for="description">Описание товара</label>
             <textarea required class="form-control" id="description" name="description"></textarea>
         </div>
-        <div class="form-group">
-            <div class="custom-file">
-                <input required type="file" name="file1" id="file1">
-                <label class="custom-file-label" for="file1">Добавить фото</label>
-            </div>
+
+        <div class="custom-file">
+            <input required type="file" name="file1" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Выберете файл</label>
         </div>
-        <div class="form-group">
-            <div class="custom-file">
-                <input type="file" name="file2" id="file2">
-                <label class="custom-file-label" for="file2">Добавить фото</label>
-            </div>
+
+        <div class="custom-file">
+            <input type="file" name="file2" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Выберете файл</label>
         </div>
-        <div class="form-group">
-            <div class="custom-file">
-                <input type="file" name="file3" id="file3">
-                <label class="custom-file-label" for="file3">Добавить фото</label>
-            </div>
-            <div class="form-group">
-                <div class="custom-file">
-                    <input type="file" name="file4" id="file4">
-                    <label class="custom-file-label" for="file4">Добавить фото</label>
-                </div>
-                <div class="custom-file">
-                    <input type="file" name="file5" id="file5">
-                    <label class="custom-file-label" for="file5">Добавить фото</label>
-                </div>
-            </div>
+
+        <div class="custom-file">
+            <input type="file" name="file3" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Выберете файл</label>
+        </div>
+
+        <div class="custom-file">
+            <input type="file" name="file4" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Выберете файл</label>
+        </div>
+
+        <div class="custom-file">
+            <input type="file" name="file5" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Выберете файл</label>
+        </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
 
             <button type="submit" style="width: 100%" class="btn btn-dark">Добавить</button>
-        </div>
     </form>
+   </div>
 </@t.template>
