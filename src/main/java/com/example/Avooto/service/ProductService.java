@@ -15,10 +15,7 @@ public interface ProductService {
                                                      Integer maxPrice);
     List<Product> getProductsListByCategory(String category);
     List<Product> getProductsListByCity(String city);
-    void saveProduct(Principal principal, Product product, MultipartFile file1,
-                            MultipartFile file2, MultipartFile file3,
-                            MultipartFile file4, MultipartFile file5) throws IOException;
-//    void saveProductList(Principal principal, List<MultipartFile> multipartFileList, Product product); to do in future
+    void saveProductList(Principal principal, List<MultipartFile> multipartFileList, Product product);
     User getUserByPrincipal(Principal principal);
     void deleteProduct(Long id);
     Product getProductById(Long id);

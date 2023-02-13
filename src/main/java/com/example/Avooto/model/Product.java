@@ -54,7 +54,6 @@ public class Product  {
     }
 
     public void addImageListToProduct(List<Image> img) {
-        img.stream().iterator().next().setProduct(this);
-        images.add((Image) img);
+        img.forEach(this::addImageToProduct);
     }
 }

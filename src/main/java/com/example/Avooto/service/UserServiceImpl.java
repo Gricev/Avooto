@@ -278,13 +278,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    List<Product> favoriteProducts = new ArrayList<>();
+//    List<Product> favoriteProducts = new ArrayList<>();
 
     @Override
     public List<Product> getProductListFavorite(Principal principal) {
         User user = getUserByPrincipal(principal);
-        user.setFavoriteProducts(favoriteProducts);
-        userRepository.save(user);
+//        List<Product> favoriteProducts = new ArrayList<>();
+//        user.setFavoriteProducts(favoriteProducts);
+//        userRepository.save(user);
         return user.getFavoriteProducts();
     }
 

@@ -66,22 +66,11 @@ public class ProductController {
     }
 
     @PostMapping("/product/create")
-    public String createProduct(@RequestParam("file1") MultipartFile file1,
-                                @RequestParam("file2") MultipartFile file2,
-                                @RequestParam("file3") MultipartFile file3,
-                                @RequestParam("file4") MultipartFile file4,
-                                @RequestParam("file5") MultipartFile file5,
+    public String createProduct(@RequestParam("files") List<MultipartFile> files,
                                 Product product, Principal principal) throws IOException {
-        productService.saveProduct(principal, product, file1, file2, file3, file4, file5);
+        productService.saveProductList(principal, files, product);
         return "redirect:/my/products";
     }
-
-//    @PostMapping("/product/create")
-//    public String createProduct(@RequestParam("files") List<MultipartFile> files,
-//                                Product product, Principal principal) throws IOException {
-//        productService.saveProductList(principal, files, product);
-//        return "redirect:/my/products";
-//    } to do in future
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
@@ -174,6 +163,7 @@ public class ProductController {
     @GetMapping("/product/favorite")
     public String showFavoriteProducts(Principal principal, Model model) {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
+//        model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
         model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
         return "favorite-products";
     }

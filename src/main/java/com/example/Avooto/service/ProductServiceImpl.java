@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -60,50 +61,15 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-//    @Override
-//    public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
-//        product.setUser(getUserByPrincipal(principal));
-//        List<Image> imageList;
-//        if (!files.isEmpty()) {
-//            imageList = toImageEntityToList(files);
-//            product.addImageListToProduct(imageList);
-//        }
-//        Product productFromDb = productRepository.save(product);
-//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
-//        productRepository.save(product);
-//    } to do in future
-
-    public void saveProduct(Principal principal, Product product, MultipartFile file1,
-                            MultipartFile file2, MultipartFile file3,
-                            MultipartFile file4, MultipartFile file5) throws IOException {
+    @Override
+    public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
         product.setUser(getUserByPrincipal(principal));
-        Image image1;
-        Image image2;
-        Image image3;
-        Image image4;
-        Image image5;
-        if (file1.getSize() != 0) {
-            image1 = toImageEntity(file1);
-            image1.setPreviewImage(true);
-            product.addImageToProduct(image1);
+        List<Image> imageList;
+        if (!files.isEmpty()) {
+            imageList = toImageEntityToList(files);
+            imageList.get(0).setPreviewImage(true);
+            product.addImageListToProduct(imageList);
         }
-        if (file1.getSize() != 0) {
-            image2 = toImageEntity(file2);
-            product.addImageToProduct(image2);
-        }
-        if (file1.getSize() != 0) {
-            image3 = toImageEntity(file3);
-            product.addImageToProduct(image3);
-        }
-        if (file1.getSize() != 0) {
-            image4 = toImageEntity(file4);
-            product.addImageToProduct(image4);
-        }
-        if (file1.getSize() != 0) {
-            image5 = toImageEntity(file5);
-            product.addImageToProduct(image5);
-        }
-
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepository.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
@@ -171,28 +137,22 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(productAfterUpdate);
     }
 
-    private Image toImageEntity(MultipartFile file) throws IOException {
+    private Image toImageEntity(MultipartFile file) {
         Image image = new Image();
         image.setName(file.getName());
         image.setOriginalFileName(file.getOriginalFilename());
         image.setContentType(file.getContentType());
         image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
+        try {
+            image.setBytes(file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return image;
     }
 
     private List<Image> toImageEntityToList(List<MultipartFile> files) {
-        List<Image> images = new ArrayList<>();
-            Stream<Object> objectList = files.stream().map(e -> {
-            try {
-                return toImageEntity(e);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            return e;
-        });
-        images.add((Image) objectList);
-        return images;
+        return files.stream().map(this::toImageEntity).collect(Collectors.toList());
     }
 }
 
