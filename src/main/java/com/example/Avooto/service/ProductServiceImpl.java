@@ -5,6 +5,7 @@ import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
 import com.example.Avooto.model.User;
+import com.example.Avooto.repository.ImageRepository;
 import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     public List<Product> getProductsListByTitleCityCategoryPrice(String title, String city, String category,
                                                                  Integer minPrice, Integer maxPrice) {
@@ -63,17 +64,21 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
-        product.setUser(getUserByPrincipal(principal));
-        List<Image> imageList;
-        if (!files.isEmpty()) {
-            imageList = toImageEntityToList(files);
-            imageList.get(0).setPreviewImage(true);
-            product.addImageListToProduct(imageList);
+        if (files.size() <= 10) {
+            product.setUser(getUserByPrincipal(principal));
+            List<Image> imageList;
+            if (!files.isEmpty()) {
+                imageList = toImageEntityToList(files);
+                imageList.get(0).setPreviewImage(true);
+                product.addImageListToProduct(imageList);
+            }
+            log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
+            Product productFromDb = productRepository.save(product);
+            productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
+            productRepository.save(product);
+        } else {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
-        Product productFromDb = productRepository.save(product);
-        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
-        productRepository.save(product);
     }
 
     public User getUserByPrincipal(Principal principal) {
@@ -92,6 +97,31 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Товар не найден с id "
                 + id));
 
+    }
+
+    @Override
+    public void changeProductListInfo(Long id, ProductDto productBeforeUpdate,
+                                  List<MultipartFile> multipartFileList) {
+        Product productAfterUpdate = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "Товар не найден с id " + id));
+        List<Image> imageList;
+        if (!multipartFileList.isEmpty()) {
+            imageList = toImageEntityToList(multipartFileList);
+            productAfterUpdate.addImageListToProduct(imageList);
+        }
+        log.info("User edited exist product. Title: {}; Author email: {}", productAfterUpdate.getTitle(),
+                productAfterUpdate.getUser().getEmail());
+        productAfterUpdate.setTitle(productBeforeUpdate.getTitle());
+        productAfterUpdate.setPrice(productBeforeUpdate.getPrice());
+        productAfterUpdate.setCity(productBeforeUpdate.getCity());
+        productAfterUpdate.setDescription(productBeforeUpdate.getDescription());
+        productAfterUpdate.setCategory(productBeforeUpdate.getCategory());
+        productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
+        if (productAfterUpdate.getImages().size() <= 10) {
+            productRepository.save(productAfterUpdate);
+        } else {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
     public void changeProductInfo(Long id, ProductDto productBeforeUpdate,
@@ -154,5 +184,23 @@ public class ProductServiceImpl implements ProductService {
     private List<Image> toImageEntityToList(List<MultipartFile> files) {
         return files.stream().map(this::toImageEntity).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteImageFromProductList(Long productId, Long imageId) {
+        productRepository.findById(productId);
+        imageRepository.deleteById(imageId);
+    }
+
+    @Override
+    public Optional<Image> showImage(Long id) {
+        return imageRepository.findById(id);
+    }
+
+    @Override
+    public void showImageFromProductList(Long productId) {
+        productRepository.findById(productId);
+    }
 }
+
+
 

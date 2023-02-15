@@ -67,7 +67,7 @@ public class ProductController {
 
     @PostMapping("/product/create")
     public String createProduct(@RequestParam("files") List<MultipartFile> files,
-                                Product product, Principal principal) throws IOException {
+                                Product product, Principal principal) {
         productService.saveProductList(principal, files, product);
         return "redirect:/my/products";
     }
@@ -94,7 +94,7 @@ public class ProductController {
     }
 
     @GetMapping("/my/products/edit/{id}")
-    public String editProduct(@PathVariable("id") Long id,
+    public String editProductList(@PathVariable("id") Long id,
                               Principal principal, Model model) {
         Product product = productService.getProductById(id);
         User user = userService.getUserByPrincipal(principal);
@@ -108,11 +108,7 @@ public class ProductController {
         model.addAttribute("products", user.getProducts());
         model.addAttribute("product", product);
         model.addAttribute("productId", product.getId());
-        model.addAttribute("file1", product.getImages().get(0).getId());
-        model.addAttribute("file2", product.getImages().get(1).getId());
-        model.addAttribute("file3", product.getImages().get(2).getId());
-        model.addAttribute("file4", product.getImages().get(3).getId());
-        model.addAttribute("file5", product.getImages().get(4).getId());
+        model.addAttribute("files", product.getImages());
         if ( !product.getUser().equals(user)) {
             model.addAttribute("errorMessage", "На чужой каравай рот не разевай, " +
                     user.getName() + " !");
@@ -122,12 +118,8 @@ public class ProductController {
     }
 
     @PostMapping("/product/edit/{id}")
-    public String editProductInformation(@PathVariable(value = "id") Long id, @RequestParam("file1") MultipartFile file1,
-                                         @RequestParam("file2") MultipartFile file2,
-                                         @RequestParam("file3") MultipartFile file3,
-                                         @RequestParam("file4") MultipartFile file4,
-                                         @RequestParam("file5") MultipartFile file5,
-                                         ProductDto product, Principal principal, Model model) throws IOException {
+    public String editProductListPost(@PathVariable(value = "id") Long id, @RequestParam("files")
+            List<MultipartFile> files, ProductDto product, Principal principal, Model model) throws IOException {
         Product productUser = productService.getProductById(id);
         User user = userService.getUserByPrincipal(principal);
         if (!productUser.getUser().equals(user)) {
@@ -135,9 +127,9 @@ public class ProductController {
                     user.getName() + " !");
             return "my-products";
         }
-            productService.changeProductInfo(id, product, file1, file2, file3, file4, file5);
-            return "redirect:/my/products";
-        }
+        productService.changeProductListInfo(id, product, files);
+        return "redirect:/my/products";
+    }
 
 
     @GetMapping("/product/category/{category}")
@@ -163,7 +155,6 @@ public class ProductController {
     @GetMapping("/product/favorite")
     public String showFavoriteProducts(Principal principal, Model model) {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
-//        model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
         model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
         return "favorite-products";
     }
@@ -179,5 +170,30 @@ public class ProductController {
     public String deleteFavoriteFromProducts(@PathVariable("id") Long id, Principal principal) {
         userService.deleteProductFromListFavorite(principal, id);
         return "redirect:/product/favorite";
+    }
+
+    @PostMapping("/my/products/edit/{id}/delete/{image}")
+    public String deleteImageFromProductList(@PathVariable("id") Long productId,
+                                             @PathVariable("image") Long imageId, Model model) {
+        model.addAttribute("product", productService.getProductById(productId));
+        model.addAttribute("image", productService.showImage(imageId));
+        model.addAttribute("images", productService.getProductById(productId).getImages());
+        productService.deleteImageFromProductList(productId, imageId);
+        return "redirect:/my/products/edit/{id}/delete";
+    }
+
+    @GetMapping("/my/products/edit/{id}/delete")
+    public String deleteProductImagesGet(@PathVariable("id") Long productId,
+                                          Model model, Principal principal) {
+        Product product = productService.getProductById(productId);
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("images", product.getImages());
+        model.addAttribute("products", user.getProducts());
+        model.addAttribute("product", product);
+        model.addAttribute("productId", product.getId());
+        model.addAttribute("files", product.getImages());
+        productService.showImageFromProductList(productId);
+        return "productImageEdit";
     }
 }

@@ -421,32 +421,8 @@
 
         <div class="custom-file">
             <input required type="file" name="files" accept="image" multiple="multiple" class="custom-file-input" id="customFile">
-            <label class="custom-file-label" for="customFile">Выберете файл</label>
+            <label class="custom-file-label" for="customFile">Выберете файлы(не более 10)</label>
         </div>
-<#--        <div class="custom-file">-->
-<#--            <input required type="file" name="file1" class="custom-file-input" id="customFile">-->
-<#--            <label class="custom-file-label" for="customFile">Выберете файл</label>-->
-<#--        </div>-->
-
-<#--        <div class="custom-file">-->
-<#--            <input type="file" name="file2" class="custom-file-input" id="customFile">-->
-<#--            <label class="custom-file-label" for="customFile">Выберете файл</label>-->
-<#--        </div>-->
-
-<#--        <div class="custom-file">-->
-<#--            <input type="file" name="file3" class="custom-file-input" id="customFile">-->
-<#--            <label class="custom-file-label" for="customFile">Выберете файл</label>-->
-<#--        </div>-->
-
-<#--        <div class="custom-file">-->
-<#--            <input type="file" name="file4" class="custom-file-input" id="customFile">-->
-<#--            <label class="custom-file-label" for="customFile">Выберете файл</label>-->
-<#--        </div>-->
-
-<#--        <div class="custom-file">-->
-<#--            <input type="file" name="file5" class="custom-file-input" id="customFile">-->
-<#--            <label class="custom-file-label" for="customFile">Выберете файл</label>-->
-<#--        </div>-->
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
 
             <button type="submit" style="width: 100%" class="btn btn-dark">Добавить</button>
