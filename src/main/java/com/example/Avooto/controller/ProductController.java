@@ -186,14 +186,23 @@ public class ProductController {
     public String deleteProductImagesGet(@PathVariable("id") Long productId,
                                           Model model, Principal principal) {
         Product product = productService.getProductById(productId);
-        User user = userService.getUserByPrincipal(principal);
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("images", product.getImages());
-        model.addAttribute("products", user.getProducts());
+        model.addAttribute("products", userService.getUserByPrincipal(principal).getProducts());
         model.addAttribute("product", product);
         model.addAttribute("productId", product.getId());
         model.addAttribute("files", product.getImages());
         productService.showImageFromProductList(productId);
         return "productImageEdit";
+    }
+
+    @PostMapping("/my/products/edit/{id}/choose/{image}")
+    public String chooseImageFromProductList(@PathVariable("id") Long productId,
+                                             @PathVariable("image") Long imageId, Model model) {
+        model.addAttribute("product", productService.getProductById(productId));
+        model.addAttribute("image", productService.showImage(imageId));
+        model.addAttribute("images", productService.getProductById(productId).getImages());
+        productService.choosePreviewImageFromProductList(productId, imageId);
+        return "redirect:/my/products/edit/{id}/delete";
     }
 }

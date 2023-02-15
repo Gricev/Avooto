@@ -30,4 +30,5 @@ public interface ProductService {
     void deleteImageFromProductList(Long productId, Long imageId);
     Optional<Image> showImage(Long id);
     void showImageFromProductList(Long productId);
+    void  choosePreviewImageFromProductList(Long productId, Long imageId);
 }

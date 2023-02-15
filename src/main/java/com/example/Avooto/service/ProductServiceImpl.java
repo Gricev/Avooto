@@ -200,6 +200,18 @@ public class ProductServiceImpl implements ProductService {
     public void showImageFromProductList(Long productId) {
         productRepository.findById(productId);
     }
+
+    @Override
+    public void choosePreviewImageFromProductList(Long productId, Long imageId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException(
+                "Товар не найден с id " + productId));
+        Image imageFromRepo = imageRepository.findById(imageId).orElseThrow(() -> new EntityNotFoundException(
+                "Картинка не найдена с id " + imageId));
+        product.setPreviewImageId(imageId);
+        product.getImages().forEach(image -> image.setPreviewImage(false));
+        product.getImages().forEach(image -> imageFromRepo.setPreviewImage(true));
+        productRepository.save(product);
+    }
 }
 
 

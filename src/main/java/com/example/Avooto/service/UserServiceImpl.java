@@ -293,6 +293,5 @@ public class UserServiceImpl implements UserService {
         User user = getUserByPrincipal(principal);
         user.getFavoriteProducts().remove(product);
         userRepository.save(user);
-
     }
 }
