@@ -5,13 +5,17 @@
     <br>
     <div style="text-align: center">
         <#if user.previewImageId??>
+            <a href="/profile/edit/avatar/change">
         <img src="/images/${user.previewImageId}"
         style="border:2px solid black; border-radius: 20px" height="120">
+            </a>
         <br>
         <br>
         <#else>
+        <a href="/profile/edit/avatar/change">
         <img src="/static/images/avatar.png"
              style="border:2px solid black; border-radius: 20px" height="120">
+        </a>
         <br>
         <br>
         </#if>

@@ -39,7 +39,7 @@
         </a>
     </div>
     <hr>
-    <form action="/product/favorite/add/${product.id}" method="post">
+    <form action="/product/favorite/add/${product.id}/${user.id}" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         <button type="submit" style="text-align: center; width: 100%" class="btn btn-dark mb-2">
             Добавить в избранное

@@ -1,5 +1,5 @@
 <#import "blocks/template.ftlh" as t>
-<@t.template user>
+<@t.template userByPrincipal>
     <h2 style="text-align: center">Избранные товары</h2>
     <hr>
     <#if errorMessage??>
@@ -7,7 +7,7 @@
     </#if>
     <div class="card-columns">
         <#list favoriteProducts as product>
-            <a href="/product/${product.id}/${product.user.id}" class="product-link">
+            <a href="/product/favorite/${product.id}/${product.user.id}" class="product-link">
 <#--            <a a href="/product/${product.id}/${user.id}" class="product-link">-->
                 <div class="card text-white bg-dark my-3 product">
                     <div class="card-top">

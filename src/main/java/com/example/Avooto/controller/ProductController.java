@@ -152,16 +152,34 @@ public class ProductController {
         return "productsByCity";
     }
 
+
+    @GetMapping("/product/favorite/{id}/{user}")
+    public String productInfoFavorite(@PathVariable("id") Long id,
+                                      @PathVariable("user") User user,
+                                      Model model, Principal principal) throws NullPointerException {
+        Product product = productService.getProductById(id);
+        model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
+        model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
+        model.addAttribute("user", user);
+        model.addAttribute("images", product.getImages());
+        model.addAttribute("authorProduct", product.getUser());
+        model.addAttribute("phone", user.getPhoneNumber());
+        model.addAttribute("date", user.getDateOfCreated().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        return "product-info";
+    }
+
     @GetMapping("/product/favorite")
     public String showFavoriteProducts(Principal principal, Model model) {
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
-        model.addAttribute("favoriteProducts", userService.getProductListFavorite(principal));
+        model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
+        model.addAttribute("favoriteProducts", userService.getUserByPrincipal(principal).getFavoriteProducts());
         return "favorite-products";
     }
 
-    @PostMapping("/product/favorite/add/{id}")
-    public String addProductToFavoriteList(@PathVariable("id") Long id, Principal principal, Model model) {
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
+    @PostMapping("/product/favorite/add/{id}/{userId}")
+    public String addProductToFavoriteList(@PathVariable("id") Long id,
+                                           @PathVariable("userId")User userId,  Principal principal, Model model) {
+        model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
+        model.addAttribute("user", userId);
         userService.addProductToFavorite(principal, id);
         return "redirect:/product/favorite";
     }
@@ -205,4 +223,5 @@ public class ProductController {
         productService.choosePreviewImageFromProductList(productId, imageId);
         return "redirect:/my/products/edit/{id}/delete";
     }
+
 }

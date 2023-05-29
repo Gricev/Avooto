@@ -1,5 +1,6 @@
 package com.example.Avooto.exception;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,17 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
+    @NotNull
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
                                                                    HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(new AppError(ex.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now()),
                 HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BanWordsException.class)
+    public ResponseEntity<Object> BanWordsHandler(BanWordsException ex, WebRequest request) {
+        return new ResponseEntity<>(new AppError(ex.getMessage(), HttpStatus.BAD_REQUEST, LocalDateTime.now()),
+                HttpStatus.BAD_REQUEST);
     }
 }

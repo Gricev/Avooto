@@ -418,6 +418,7 @@
     </div>
 </form>
 <hr>
+<#--    <div class="row">-->
 <div class="card-columns">
     <#list products as product>
         <a href="/product/${product.id}/${product.user.id}" class="product-link">
@@ -441,5 +442,6 @@
         <h3 style="text-align: center">Товаров не найдено</h3>
     </#list>
     <a href="#" title="Вернуться к началу" class="topbutton">Наверх</a>
-</div>
+<#--</div>-->
+    </div>
 </@t.template>

@@ -1,6 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.ProductDto;
+import com.example.Avooto.exception.BanWordsException;
 import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
@@ -13,16 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService, RussianBanWords {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -64,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
+        List<String> stringList = convertTxtToList();
         if (files.size() <= 10) {
             product.setUser(getUserByPrincipal(principal));
             List<Image> imageList;
@@ -72,7 +78,12 @@ public class ProductServiceImpl implements ProductService {
                 imageList.get(0).setPreviewImage(true);
                 product.addImageListToProduct(imageList);
             }
-            log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
+            log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(),
+                    product.getUser().getEmail());
+            for (String sub: stringList) {
+                if (product.getTitle().contains(sub) || product.getDescription().contains(sub))
+                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
+            }
             Product productFromDb = productRepository.save(product);
             productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
             productRepository.save(product);
@@ -101,9 +112,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void changeProductListInfo(Long id, ProductDto productBeforeUpdate,
-                                  List<MultipartFile> multipartFileList) {
+                                      List<MultipartFile> multipartFileList) {
         Product productAfterUpdate = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "Товар не найден с id " + id));
+        List<String> stringList = convertTxtToList();
         List<Image> imageList;
         if (!multipartFileList.isEmpty()) {
             imageList = toImageEntityToList(multipartFileList);
@@ -117,54 +129,16 @@ public class ProductServiceImpl implements ProductService {
         productAfterUpdate.setDescription(productBeforeUpdate.getDescription());
         productAfterUpdate.setCategory(productBeforeUpdate.getCategory());
         productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
+        for (String sub: stringList) {
+            if (productAfterUpdate.getTitle().contains(sub) || productAfterUpdate.getDescription().contains(sub)) {
+                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
+            }
+        }
         if (productAfterUpdate.getImages().size() <= 10) {
             productRepository.save(productAfterUpdate);
         } else {
             throw new ArrayIndexOutOfBoundsException();
         }
-    }
-
-    public void changeProductInfo(Long id, ProductDto productBeforeUpdate,
-                                  MultipartFile file1, MultipartFile file2,
-                                  MultipartFile file3, MultipartFile file4,
-                                  MultipartFile file5) throws IOException {
-        Product productAfterUpdate = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                "Товар не найден с id " + id));
-        Image image1;
-        Image image2;
-        Image image3;
-        Image image4;
-        Image image5;
-        if (file1.getSize() != 0) {
-            image1 = toImageEntity(file1);
-            image1.setPreviewImage(true);
-            productAfterUpdate.addImageToProduct(image1);
-        }
-        if (file1.getSize() != 0) {
-            image2 = toImageEntity(file2);
-            productAfterUpdate.addImageToProduct(image2);
-        }
-        if (file1.getSize() != 0) {
-            image3 = toImageEntity(file3);
-            productAfterUpdate.addImageToProduct(image3);
-        }
-        if (file1.getSize() != 0) {
-            image4 = toImageEntity(file4);
-            productAfterUpdate.addImageToProduct(image4);
-        }
-        if (file1.getSize() != 0) {
-            image5 = toImageEntity(file5);
-            productAfterUpdate.addImageToProduct(image5);
-        }
-        log.info("User edited exist product. Title: {}; Author email: {}", productAfterUpdate.getTitle(),
-                productAfterUpdate.getUser().getEmail());
-        productAfterUpdate.setTitle(productBeforeUpdate.getTitle());
-        productAfterUpdate.setPrice(productBeforeUpdate.getPrice());
-        productAfterUpdate.setCity(productBeforeUpdate.getCity());
-        productAfterUpdate.setDescription(productBeforeUpdate.getDescription());
-        productAfterUpdate.setCategory(productBeforeUpdate.getCategory());
-        productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
-        productRepository.save(productAfterUpdate);
     }
 
     private Image toImageEntity(MultipartFile file) {
@@ -212,7 +186,23 @@ public class ProductServiceImpl implements ProductService {
         product.getImages().forEach(image -> imageFromRepo.setPreviewImage(true));
         productRepository.save(product);
     }
+
+    @Override
+    public List<String> convertTxtToList() {
+        Scanner s = null;
+        try {
+            s = new Scanner(new File("C:\\Users\\grice\\Downloads\\Avooto\\src\\main\\resources\\" +
+                    "russian_ban_words.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> list = new ArrayList<>();
+        while (true) {
+            assert s != null;
+            if (!s.hasNext()) break;
+            list.add(s.next());
+        }
+        s.close();
+        return list;
+    }
 }
-
-
-

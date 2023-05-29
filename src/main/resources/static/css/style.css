@@ -39,3 +39,12 @@ img {
     width: 100%;
     margin-bottom: 0;
 }
+.pull-right-xs {
+    float: right;
+}
+
+@media (min-width: 768px) {
+    .pull-right-xs {
+        float: left;
+    }
+}

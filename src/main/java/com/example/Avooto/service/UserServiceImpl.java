@@ -1,6 +1,7 @@
 package com.example.Avooto.service;
 
 import com.example.Avooto.dto.UserDto;
+import com.example.Avooto.exception.BanWordsException;
 import com.example.Avooto.exception.EntityNotFoundException;
 import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
@@ -9,14 +10,15 @@ import com.example.Avooto.model.User;
 import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
-
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, RussianBanWords {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
@@ -35,15 +37,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createUser(User user) {
+        List<String> stringList = convertTxtToList();
         String email = user.getEmail();
         if (userRepository.findByEmail(email) != null) {
             return false;
+        }
+        for (String sub : stringList) {
+            if (user.getName().contains(sub)) {
+                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
+            }
         }
         int passwordNumDefault = 1234;
         user.setForgetPasswordNumb(passwordNumDefault);
         user.setActive(true);
         user.setPassword(user.getPassword());
-        user.getRoles().add(Role.ROLE_ADMIN);
+        user.getRoles().add(Role.ROLE_USER);
         user.setActivationCode(UUID.randomUUID().toString());
         log.info("Saving new User with email: {}", email);
         userRepository.save(user);
@@ -114,7 +122,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeUserName(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
+        List<String> stringList = convertTxtToList();
         userAfterUpdate.setName(userBeforeUpdate.getName());
+        for (String sub : stringList) {
+            if (userAfterUpdate.getName().contains(sub)) {
+                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
+            }
+        }
         log.info("Saving changes in Repo. Username: {}; ", userAfterUpdate.getName());
         userRepository.save(userAfterUpdate);
     }
@@ -250,22 +264,22 @@ public class UserServiceImpl implements UserService {
         if (user == null | !password.equals(passwordRepeat)) {
             return false;
         } else {
-                user.setPassword(password);
-                user.setActivationCode(UUID.randomUUID().toString());
+            user.setPassword(password);
+            user.setActivationCode(UUID.randomUUID().toString());
+            userRepository.save(user);
+            if (!StringUtils.isEmpty(user.getEmail())) {
+                String message = String.format(
+                        "Здравствуйте, %s! \n" +
+                                "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
+                                " http://localhost:8112/activate/%s" +
+                                " Ваш новый пароль: " + user.getPassword(),
+                        user.getName(),
+                        user.getActivationCode());
+                mailService.sendSimpleMessage(user.getEmail(), "Изменение пароля AVOOTO", message);
+                user.setPassword(passwordEncoder.encode(password));
+                log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(user.getPassword()));
                 userRepository.save(user);
-                if (!StringUtils.isEmpty(user.getEmail())) {
-                    String message = String.format(
-                            "Здравствуйте, %s! \n" +
-                                    "Ваш пароль был успешно изменен, для активации аккаунта, нажмите:" +
-                                    " http://localhost:8112/activate/%s" +
-                                    " Ваш новый пароль: " + user.getPassword(),
-                            user.getName(),
-                            user.getActivationCode());
-                    mailService.sendSimpleMessage(user.getEmail(), "Изменение пароля AVOOTO", message);
-                    user.setPassword(passwordEncoder.encode(password));
-                    log.info("Saving changes in Repo. Password: {}; ", passwordEncoder.encode(user.getPassword()));
-                    userRepository.save(user);
-                }
+            }
         }
         return true;
     }
@@ -280,10 +294,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Product> getProductListFavorite(Principal principal) {
-        List<Product> productsFavorite = new ArrayList<>();
         User user = getUserByPrincipal(principal);
-        user.setFavoriteProducts(productsFavorite);
-        userRepository.save(user);
         return user.getFavoriteProducts();
     }
 
@@ -294,4 +305,15 @@ public class UserServiceImpl implements UserService {
         user.getFavoriteProducts().remove(product);
         userRepository.save(user);
     }
-}
+
+    @SneakyThrows
+    @Override
+    public List<String> convertTxtToList() {
+        ArrayList<String> list = new ArrayList<>();
+        try (Scanner s = new Scanner(new File("russian_ban_words.txt"))) {
+            while (s.hasNext())
+                list.add(s.next());
+            }
+            return list;
+        }
+    }
