@@ -313,7 +313,7 @@ public class UserServiceImpl implements UserService, RussianBanWords {
         try (Scanner s = new Scanner(new File("russian_ban_words.txt"))) {
             while (s.hasNext())
                 list.add(s.next());
-            }
-            return list;
         }
+        return list;
     }
+}

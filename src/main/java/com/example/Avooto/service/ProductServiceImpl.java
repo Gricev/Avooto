@@ -10,6 +10,7 @@ import com.example.Avooto.repository.ImageRepository;
 import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -187,22 +188,14 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
         productRepository.save(product);
     }
 
+    @SneakyThrows
     @Override
     public List<String> convertTxtToList() {
-        Scanner s = null;
-        try {
-            s = new Scanner(new File("C:\\Users\\grice\\Downloads\\Avooto\\src\\main\\resources\\" +
-                    "russian_ban_words.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         ArrayList<String> list = new ArrayList<>();
-        while (true) {
-            assert s != null;
-            if (!s.hasNext()) break;
-            list.add(s.next());
+        try (Scanner s = new Scanner(new File("russian_ban_words.txt"))) {
+            while (s.hasNext())
+                list.add(s.next());
         }
-        s.close();
         return list;
     }
 }
