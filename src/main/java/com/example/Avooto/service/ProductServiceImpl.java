@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductServiceImpl implements ProductService, RussianBanWords {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -70,7 +71,6 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
 
     @Override
     public void saveProductList(Principal principal, List<MultipartFile> files, Product product) {
-        List<String> stringList = convertTxtToList();
         if (files.size() <= 10) {
             product.setUser(getUserByPrincipal(principal));
             List<Image> imageList;
@@ -81,8 +81,7 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
             }
             log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(),
                     product.getUser().getEmail());
-            for (String sub: stringList) {
-                if (product.getTitle().contains(sub) || product.getDescription().contains(sub))
+                if (hasBadWords(product.getTitle()) || hasBadWords(product.getDescription())) {
                 throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
             }
             Product productFromDb = productRepository.save(product);
@@ -116,7 +115,6 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
                                       List<MultipartFile> multipartFileList) {
         Product productAfterUpdate = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "Товар не найден с id " + id));
-        List<String> stringList = convertTxtToList();
         List<Image> imageList;
         if (!multipartFileList.isEmpty()) {
             imageList = toImageEntityToList(multipartFileList);
@@ -130,11 +128,9 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
         productAfterUpdate.setDescription(productBeforeUpdate.getDescription());
         productAfterUpdate.setCategory(productBeforeUpdate.getCategory());
         productAfterUpdate.setPreviewImageId(productAfterUpdate.getImages().get(0).getId());
-        for (String sub: stringList) {
-            if (productAfterUpdate.getTitle().contains(sub) || productAfterUpdate.getDescription().contains(sub)) {
+            if (hasBadWords(productAfterUpdate.getTitle()) || hasBadWords(productAfterUpdate.getDescription())) {
                 throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
             }
-        }
         if (productAfterUpdate.getImages().size() <= 10) {
             productRepository.save(productAfterUpdate);
         } else {
@@ -187,15 +183,12 @@ public class ProductServiceImpl implements ProductService, RussianBanWords {
         product.getImages().forEach(image -> imageFromRepo.setPreviewImage(true));
         productRepository.save(product);
     }
-
-    @SneakyThrows
-    @Override
-    public List<String> convertTxtToList() {
-        ArrayList<String> list = new ArrayList<>();
-        try (Scanner s = new Scanner(new File("russian_ban_words.txt"))) {
-            while (s.hasNext())
-                list.add(s.next());
-        }
-        return list;
+    private static boolean hasBadWords(String title) {
+        String titleInLowerCase = title.toLowerCase();
+        return Pattern.matches(".*ху[йеё].*", titleInLowerCase) ||
+                Pattern.matches(".*пизд.*", titleInLowerCase) ||
+                Pattern.matches(".*ебан.*", titleInLowerCase) ||
+                Pattern.matches(".*ебл.*", titleInLowerCase) ||
+                Pattern.matches(".*бляд.*", titleInLowerCase);
     }
 }

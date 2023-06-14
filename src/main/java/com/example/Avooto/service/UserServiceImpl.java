@@ -10,24 +10,22 @@ import com.example.Avooto.model.User;
 import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, RussianBanWords {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
@@ -37,15 +35,12 @@ public class UserServiceImpl implements UserService, RussianBanWords {
 
     @Override
     public boolean createUser(User user) {
-        List<String> stringList = convertTxtToList();
         String email = user.getEmail();
         if (userRepository.findByEmail(email) != null) {
             return false;
         }
-        for (String sub : stringList) {
-            if (user.getName().contains(sub)) {
+            if (hasBadWords(user.getName())) {
                 throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
-            }
         }
         int passwordNumDefault = 1234;
         user.setForgetPasswordNumb(passwordNumDefault);
@@ -122,12 +117,9 @@ public class UserServiceImpl implements UserService, RussianBanWords {
     @Override
     public void changeUserName(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
-        List<String> stringList = convertTxtToList();
         userAfterUpdate.setName(userBeforeUpdate.getName());
-        for (String sub : stringList) {
-            if (userAfterUpdate.getName().contains(sub)) {
-                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
-            }
+        if (hasBadWords(userAfterUpdate.getName())) {
+            throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
         }
         log.info("Saving changes in Repo. Username: {}; ", userAfterUpdate.getName());
         userRepository.save(userAfterUpdate);
@@ -306,14 +298,18 @@ public class UserServiceImpl implements UserService, RussianBanWords {
         userRepository.save(user);
     }
 
-    @SneakyThrows
-    @Override
-    public List<String> convertTxtToList() {
-        ArrayList<String> list = new ArrayList<>();
-        try (Scanner s = new Scanner(new File("russian_ban_words.txt"))) {
-            while (s.hasNext())
-                list.add(s.next());
-        }
-        return list;
+    private static boolean hasBadWords(String title) {
+        String titleInLowerCase = title.toLowerCase();
+        return Pattern.matches(".*ху[йеё].*", titleInLowerCase) ||
+                Pattern.matches(".*пизд.*", titleInLowerCase) ||
+                Pattern.matches(".*ебан.*", titleInLowerCase) ||
+                Pattern.matches(".*ебл.*", titleInLowerCase) ||
+                Pattern.matches("пид.*", titleInLowerCase) ||
+                Pattern.matches(".*бляд.*", titleInLowerCase);
+    }
+
+    private static boolean hasRightPhoneNumber(String phoneNumber) {
+        String regex = "^\\\\d{10}$";
+        return Pattern.matches(regex, phoneNumber);
     }
 }

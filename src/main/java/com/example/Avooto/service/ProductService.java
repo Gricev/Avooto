@@ -21,10 +21,6 @@ public interface ProductService {
     User getUserByPrincipal(Principal principal);
     void deleteProduct(Long id);
     Product getProductById(Long id);
-//    void changeProductInfo(Long id, ProductDto productBeforeUpdate,
-//                                  MultipartFile file1, MultipartFile file2,
-//                                  MultipartFile file3, MultipartFile file4,
-//                                  MultipartFile file5) throws IOException;
     void changeProductListInfo(Long id, ProductDto productBeforeUpdate,
                                List<MultipartFile> multipartFileList) throws IOException;
     void deleteImageFromProductList(Long productId, Long imageId);
