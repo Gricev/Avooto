@@ -7,7 +7,6 @@ import com.example.Avooto.model.Image;
 import com.example.Avooto.model.Product;
 import com.example.Avooto.model.Role;
 import com.example.Avooto.model.User;
-import com.example.Avooto.repository.ProductRepository;
 import com.example.Avooto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +28,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
-    private final ProductRepository productRepository;
-
     private final EmailServiceImpl mailService;
 
     @Override
@@ -39,31 +36,35 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email) != null) {
             return false;
         }
-            if (hasBadWords(user.getName())) {
-                throw new BanWordsException("Нецензурная лексика на данной площадке запрещена");
+        if (hasBadWords(user.getName())) {
+            throw new BanWordsException("Нецензурная лексика на данной площадке не используется");
         }
-        int passwordNumDefault = 1234;
-        user.setForgetPasswordNumb(passwordNumDefault);
-        user.setActive(true);
-        user.setPassword(user.getPassword());
-        user.getRoles().add(Role.ROLE_USER);
-        user.setActivationCode(UUID.randomUUID().toString());
-        log.info("Saving new User with email: {}", email);
-        userRepository.save(user);
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format(
-                    "Здравствуйте, %s! \n" +
-                            "Добро пожаловать на AVOOTO, для подтверждения аккаунта на сайе, нажмите: " +
-                            "http://localhost:8112/activate/%s" +
-                            " your password: " + user.getPassword(),
-                    user.getName(),
-                    user.getActivationCode()
-            );
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (hasRightPhoneNumber(user.getPhoneNumber())) {
+            int passwordNumDefault = 1234;
+            user.setForgetPasswordNumb(passwordNumDefault);
+            user.setActive(true);
+            user.setPassword(user.getPassword());
+            user.getRoles().add(Role.ROLE_USER);
+            user.setActivationCode(UUID.randomUUID().toString());
+            log.info("Saving new User with email: {}", email);
             userRepository.save(user);
-            mailService.sendSimpleMessage(user.getEmail(), "Активация аккаунта AVOOTO", message);
+            if (!StringUtils.isEmpty(user.getEmail())) {
+                String message = String.format(
+                        "Здравствуйте, %s! \n" +
+                                "Добро пожаловать на AVOOTO, для подтверждения аккаунта на сайе, нажмите: " +
+                                "http://localhost:8112/activate/%s" +
+                                " your password: " + user.getPassword(),
+                        user.getName(),
+                        user.getActivationCode()
+                );
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                userRepository.save(user);
+                mailService.sendSimpleMessage(user.getEmail(), "Активация аккаунта AVOOTO", message);
+            }
+            return true;
+        } else {
+            throw new BanWordsException("Телефонный номер введен некорректно");
         }
-        return true;
     }
 
     @Override
@@ -128,9 +129,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeUserPhone(Principal principal, UserDto userBeforeUpdate) {
         User userAfterUpdate = getUserByPrincipal(principal);
-        userAfterUpdate.setPhoneNumber(userBeforeUpdate.getName());
+        userAfterUpdate.setPhoneNumber(userBeforeUpdate.getPhoneNumber());
+        if (hasRightPhoneNumber(userAfterUpdate.getPhoneNumber())) {
         userAfterUpdate.setActivationCode(UUID.randomUUID().toString());
-        if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
+            if (!StringUtils.isEmpty(userAfterUpdate.getEmail())) {
             String message = String.format(
                     "Здравствуйте, %s! \n" +
                             "Ваш телефон был успешно изменен, если это были не Вы, перейдите по ссылке и " +
@@ -142,6 +144,9 @@ public class UserServiceImpl implements UserService {
             log.info("Saving changes in Repo. Phone-number: {}; ", userAfterUpdate.getPhoneNumber());
             userRepository.save(userAfterUpdate);
             mailService.sendSimpleMessage(userAfterUpdate.getEmail(), "Изменение номера телефона AVOOTO", message);
+            }
+        } else {
+            throw new BanWordsException("ну нееееет");
         }
     }
 
@@ -278,9 +283,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addProductToFavorite(Principal principal, Long id) {
+        List<Product> products = getFavoriteListFromService(principal);
         User user = getUserByPrincipal(principal);
         Product product = productService.getProductById(id);
-        user.getFavoriteProducts().add(product);
+        products.add(product);
         userRepository.save(user);
     }
 
@@ -309,7 +315,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private static boolean hasRightPhoneNumber(String phoneNumber) {
-        String regex = "^\\\\d{10}$";
-        return Pattern.matches(regex, phoneNumber);
+        return Pattern.matches("^\\d{11}$", phoneNumber);
+    }
+
+    private List<Product> getFavoriteListFromService(Principal principal) {
+        User user = getUserByPrincipal(principal);
+        List<Product> products = new ArrayList<>();
+        user.setFavoriteProducts(products);
+        userRepository.save(user);
+        return products;
     }
 }

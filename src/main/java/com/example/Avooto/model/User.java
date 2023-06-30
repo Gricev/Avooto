@@ -21,7 +21,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "email", unique = true, updatable = false)
     private String email;
-    @Column(name = "phoneNumber", length = 11)
+    @Column(name = "phoneNumber")
     private String phoneNumber;
     @Column(name = "name")
     private String name;
@@ -49,7 +49,7 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Product> products = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Product> favoriteProducts = new ArrayList<>();
     private LocalDateTime dateOfCreated;
 

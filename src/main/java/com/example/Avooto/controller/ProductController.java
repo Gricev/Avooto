@@ -177,7 +177,7 @@ public class ProductController {
 
     @PostMapping("/product/favorite/add/{id}/{userId}")
     public String addProductToFavoriteList(@PathVariable("id") Long id,
-                                           @PathVariable("userId")User userId,  Principal principal, Model model) {
+                                           @PathVariable("userId")User userId, Principal principal, Model model) {
         model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
         model.addAttribute("user", userId);
         userService.addProductToFavorite(principal, id);
